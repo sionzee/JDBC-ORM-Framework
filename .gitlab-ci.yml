@@ -1,0 +1,14 @@
+stages:
+  - build
+#  - deploy
+job1:
+  stage: build
+  script:
+    - javac $(find ./* | grep .java)
+  only:
+    - develop
+#job2:
+#  stage: deploy
+#
+#  only:
+#    - develop
