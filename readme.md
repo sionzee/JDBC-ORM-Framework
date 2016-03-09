@@ -52,7 +52,10 @@ public class User implements Entity {
 
 4.) Create Tables
 
-```NOT YET```
+```java
+TableCreator tc = new TableCreator();
+tc.createTables(mysql, User.class);
+```
 
 5.) Time for fun
 
@@ -78,7 +81,7 @@ user.setUsername("Foo2");
 entityManager.persist(user).flush();
 ```
 
-6.) Links
+6.) Links - **NOT WORK**
 
 ```java
 class User implements Entity {
