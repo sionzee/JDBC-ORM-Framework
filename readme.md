@@ -1,5 +1,5 @@
 # JDBC ORM Framework
-**Project is in Development stage. [Checkout!](branch:develop)**
+**Project is in Development stage. [Checkout!](https://gitlab.bukva.cz/siOnzee/JDBC-ORM-FRAMEWORK/tree/develop)**
 
 ## Requirements
 - Java 8 (_due to Lambda's functions :p_)
