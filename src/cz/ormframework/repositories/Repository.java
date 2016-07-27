@@ -118,7 +118,6 @@ public class Repository<Type> {
             Statement st = entityManager.getDatabase().getConnection().createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, ResultSet.CLOSE_CURSORS_AT_COMMIT);
             if(query.startsWith("DELETE")) {
                 st.execute(query);
-                entityManager.flush();
                 return Collections.emptySet();
             }
             ResultSet rs = st.executeQuery(query);

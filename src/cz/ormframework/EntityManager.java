@@ -227,9 +227,6 @@ public class EntityManager implements IEntityManager {
         } catch (SQLException e) {
             Debug.exception(e);
         }
-
-        flush();
-
         QueryDoneEvent<Type> queryDoneEvent = new QueryDoneEvent<>(queryID, entity, result);
         EventManager.FireEvent(queryDoneEvent);
         return this;
