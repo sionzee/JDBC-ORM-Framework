@@ -1,0 +1,5 @@
+#Hide plugin in /plugins?
+hidden: true
+
+#Print to console executed queries? it's like DEBUG.
+default-listener: true

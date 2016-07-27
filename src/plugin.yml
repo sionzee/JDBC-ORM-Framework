@@ -1,0 +1,3 @@
+name: JOF
+main: cz.ormframework.plugins.bukkit.BukkitPlugin
+version: 2.1
