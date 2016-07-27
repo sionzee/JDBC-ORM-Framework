@@ -41,14 +41,14 @@ public class Repository<Type> {
     }
 
     /**
-     * Find query builder . from.
+     * find query builder . from.
      *
      * @return the query builder . from
      */
-    public QueryBuilder<Type>.FROM Find() {
+    public QueryBuilder<Type>.FROM find() {
         List<String> columns = EntityUtils.getColumns(clazz);
         String[] cols = columns.toArray(new String[columns.size()]);
-        return queryBuilder.SELECT(cols).FROM(clazz);
+        return queryBuilder.select(cols).from(clazz);
     }
 
     /**
@@ -56,11 +56,11 @@ public class Repository<Type> {
      *
      * @return the query builder
      */
-    public QueryBuilder<Type> NewQuery() {
+    public QueryBuilder<Type> newQuery() {
         return queryBuilder;
     }
 
-    private Type CreateType(ResultSet rs) {
+    private Type createType(ResultSet rs) {
         Type type = null;
         try {
             type = clazz.newInstance();
@@ -83,11 +83,11 @@ public class Repository<Type> {
                                 for (int i = 0; i < arrayIds.length; i++) {
                                     String s = arrayIds[i];
                                     int id = Integer.parseInt(s);
-                                    Array.set(instances, i, entityManager.getRepository(field.getType().getComponentType()).Find().WHERE("id = {0}", id).ONE());
+                                    Array.set(instances, i, entityManager.getRepository(field.getType().getComponentType()).find().where("id = {0}", id).one());
                                 }
                                 field.set(finalType, instances);
                             } else {
-                                field.set(finalType, entityManager.getRepository(field.getType()).Find().WHERE("id = {0}", rs.getInt(columnName)).ONE());
+                                field.set(finalType, entityManager.getRepository(field.getType()).find().where("id = {0}", rs.getInt(columnName)).one());
                             }
                         }
 
@@ -121,7 +121,7 @@ public class Repository<Type> {
             Statement st = entityManager.getDatabase().getConnection().createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, ResultSet.CLOSE_CURSORS_AT_COMMIT);
             ResultSet rs = st.executeQuery(query);
             while (rs.next()) {
-                typeList.add(CreateType(rs));
+                typeList.add(createType(rs));
             }
         } catch (SQLException e) {
             e.printStackTrace();

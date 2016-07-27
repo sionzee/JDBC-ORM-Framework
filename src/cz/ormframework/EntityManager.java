@@ -92,7 +92,7 @@ public class EntityManager implements IEntityManager {
         boolean update = id > 0;
         if (update) {
             StringBuilder changes = new StringBuilder();
-            Object databaseEntity = getRepository(entity.getClass()).Find().WHERE("id = {0}", id).ONE();
+            Object databaseEntity = getRepository(entity.getClass()).find().where("id = {0}", id).one();
             Arrays.stream(entity.getClass().getDeclaredFields()).forEach(field -> {
                 field.setAccessible(true);
                 String columnName = EntityUtils.getColumnName(field);
@@ -117,7 +117,7 @@ public class EntityManager implements IEntityManager {
 
             if(changes.length() < 1)
                 return this;
-            String result = Formatter.format("UPDATE `{0}` SET {1} WHERE {2}", table, changes.substring(0, changes.length() - 2), "`id` = '" + id + "'");
+            String result = Formatter.format("UPDATE `{0}` SET {1} where {2}", table, changes.substring(0, changes.length() - 2), "`id` = '" + id + "'");
             ExecuteQueryEvent executeQueryEvent = new ExecuteQueryEvent(queryID, Thread.currentThread().getStackTrace()[0], result, statement);
             EventManager.FireEvent(executeQueryEvent);
             if (executeQueryEvent.isCancelled()) {
@@ -211,7 +211,7 @@ public class EntityManager implements IEntityManager {
             return this;
         }
 
-        String result = "DELETE FROM `" + EntityUtils.getTable(entity.getClass()) + "` WHERE `id` = '" + EntityUtils.getId(entity) + "'";
+        String result = "DELETE from `" + EntityUtils.getTable(entity.getClass()) + "` where `id` = '" + EntityUtils.getId(entity) + "'";
 
         ExecuteQueryEvent executeQueryEvent = new ExecuteQueryEvent(queryID, Thread.currentThread().getStackTrace()[0], result, statement);
         EventManager.FireEvent(executeQueryEvent);

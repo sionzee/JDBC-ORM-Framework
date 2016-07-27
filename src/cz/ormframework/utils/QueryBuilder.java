@@ -54,7 +54,7 @@ public class QueryBuilder<Entity> {
     }
 
 
-    /* --------------------------------------- ORDER --------------------------------------- */
+    /* --------------------------------------- order --------------------------------------- */
 
     /**
      * The type Order.
@@ -68,7 +68,7 @@ public class QueryBuilder<Entity> {
          * @param ordering the ordering
          */
         public ORDER(String query, String column, ORDERING ordering) {
-            _query = query + " ORDER BY " + normalize(column) + " " + ordering.name();
+            _query = query + " order BY " + normalize(column) + " " + ordering.name();
         }
     }
 
@@ -83,7 +83,7 @@ public class QueryBuilder<Entity> {
          *
          * @return the entity
          */
-        public Entity ONE() {
+        public Entity one() {
             Iterator<Entity> it = entityManager.getRepository(clazz).query(this).iterator();
             if(!it.hasNext())
                 return null;
@@ -96,14 +96,14 @@ public class QueryBuilder<Entity> {
          * @param to   the to
          * @return the collection
          */
-        public Collection<Entity> LIMIT(int from, int to) { return entityManager.getRepository(clazz).query(this); }
+        public Collection<Entity> limit(int from, int to) { return entityManager.getRepository(clazz).query(this); }
 
         /**
          * All collection.
          *
          * @return the collection
          */
-        public Collection<Entity> ALL() {return entityManager.getRepository(clazz).query(this);}
+        public Collection<Entity> all() {return entityManager.getRepository(clazz).query(this);}
 
         @Override
         public String toString() {
@@ -111,7 +111,7 @@ public class QueryBuilder<Entity> {
         }
     }
 
-    /* --------------------------------------- WHERE --------------------------------------- */
+    /* --------------------------------------- where --------------------------------------- */
 
     /**
      * The type Where.
@@ -125,7 +125,7 @@ public class QueryBuilder<Entity> {
          * @param params    the params
          */
         public WHERE(String query, String condition, Object[] params) {
-            _query = query + " WHERE ";
+            _query = query + " where ";
 
             boolean first = true;
             for(String word : condition.split(" ")) {
@@ -156,7 +156,7 @@ public class QueryBuilder<Entity> {
         }
     }
 
-     /* --------------------------------------- FROM --------------------------------------- */
+     /* --------------------------------------- from --------------------------------------- */
 
     /**
      * The type From.
@@ -169,10 +169,10 @@ public class QueryBuilder<Entity> {
          * @param classes the classes
          */
         public FROM(String query, Class... classes) {
-            _query = query + " FROM ";
+            _query = query + " from ";
             if(classes.length <= 0)
                 try {
-                    throw new UnknownValueException("[QueryBuilder][FROM] Can't take from (0 params or null). " + query);
+                    throw new UnknownValueException("[QueryBuilder][from] Can't take from (0 params or null). " + query);
                 } catch (UnknownValueException e) {
                     e.printStackTrace();
                 }
@@ -190,7 +190,7 @@ public class QueryBuilder<Entity> {
          * @param params    the params
          * @return the where
          */
-        public WHERE WHERE(String condition, Object... params) {
+        public WHERE where(String condition, Object... params) {
             return new WHERE(_query, condition, params);
         }
 
@@ -201,12 +201,12 @@ public class QueryBuilder<Entity> {
          * @param ordering the ordering
          * @return the order
          */
-        public ORDER ORDER(String column, ORDERING ordering) {
+        public ORDER order(String column, ORDERING ordering) {
             return new ORDER(_query, column, ordering);
         }
     }
 
-    /* --------------------------------------- SELECT, UPDATE, DELETE --------------------------------------- */
+    /* --------------------------------------- select, UPDATE, DELETE --------------------------------------- */
 
 
     /**
@@ -221,11 +221,11 @@ public class QueryBuilder<Entity> {
         public SELECT(String[] params) {
             if(params.length <= 0)
                 try {
-                    throw new UnknownValueException("[QueryBuilder][SELECT] Can't select from (0 params or null).");
+                    throw new UnknownValueException("[QueryBuilder][select] Can't select from (0 params or null).");
                 } catch (UnknownValueException e) {
                     e.printStackTrace();
                 }
-            _query = "SELECT ";
+            _query = "select ";
 
             for (String table : params) {
                 if(table.equalsIgnoreCase("*") || table.endsWith("*"))
@@ -242,7 +242,7 @@ public class QueryBuilder<Entity> {
          * @param classes the classes
          * @return the from
          */
-        public FROM FROM(Class... classes) {
+        public FROM from(Class... classes) {
             return new FROM(_query, classes);
         }
     }
@@ -255,7 +255,7 @@ public class QueryBuilder<Entity> {
      * @param params the params
      * @return the select
      */
-    public SELECT SELECT(String... params) {
+    public SELECT select(String... params) {
         return new SELECT(params);
     }
 

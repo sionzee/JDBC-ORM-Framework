@@ -130,7 +130,7 @@ public class TestJDBC {
      */
     @Test(timeout = 2000L)
     public void DSelectOne() {
-        TestEntity te = em.getRepository(TestEntity.class).Find().WHERE("id = {0}", 1).ONE();
+        TestEntity te = em.getRepository(TestEntity.class).find().where("id = {0}", 1).one();
         Assert.assertNotNull(te);
         Debug.entity(te, false);
     }
@@ -140,7 +140,7 @@ public class TestJDBC {
      */
     @Test(timeout = 3000L)
     public void ESelectAll() {
-        Collection<TestEntity> te = em.getRepository(TestEntity.class).Find().ALL();
+        Collection<TestEntity> te = em.getRepository(TestEntity.class).find().all();
         Assert.assertNotNull(te);
         te.parallelStream().forEach(Assert::assertNotNull);
     }
@@ -150,7 +150,7 @@ public class TestJDBC {
      */
     @Test(timeout = 4000L)
     public void FSelectFilter() {
-        TestEntity te = em.getRepository(TestEntity.class).Find().WHERE("id = {0}", 5).ORDER("id", QueryBuilder.ORDERING.ASC).ONE();
+        TestEntity te = em.getRepository(TestEntity.class).find().where("id = {0}", 5).ORDER("id", QueryBuilder.ORDERING.ASC).one();
         Assert.assertNotNull(te);
     }
 
@@ -159,12 +159,12 @@ public class TestJDBC {
      */
     @Test(timeout = 5000L)
     public void GUpdateInserts() {
-        TestEntity te = em.getRepository(TestEntity.class).Find().WHERE("id = {0}", 5).ONE();
+        TestEntity te = em.getRepository(TestEntity.class).find().where("id = {0}", 5).one();
         Assert.assertNotNull(te);
         te.setTestingBoolean(false);
         em.persist(te);
         em.flush();
-        Assert.assertFalse(em.getRepository(TestEntity.class).Find().WHERE("id = {0}", 5).ONE().getTestingBoolean());
+        Assert.assertFalse(em.getRepository(TestEntity.class).find().where("id = {0}", 5).one().getTestingBoolean());
     }
 
     /**
@@ -172,7 +172,7 @@ public class TestJDBC {
      */
     @Test
     public void HGetInnerEntity() {
-        TestEntityOnEntity te = em.getRepository(TestEntity.class).Find().WHERE("id = {0}", 1).ONE().getTestingEntity();
+        TestEntityOnEntity te = em.getRepository(TestEntity.class).find().where("id = {0}", 1).one().getTestingEntity();
         Assert.assertNotNull(te);
         Debug.info(te.getTestValue());
     }
@@ -185,7 +185,7 @@ public class TestJDBC {
         TestEntityOnEntity test = new TestEntityOnEntity();
         test.setTestValue("NEW TEST VALUE");
         Assert.assertNotNull(test);
-        TestEntity te = em.getRepository(TestEntity.class).Find().WHERE("id = {0}", 1).ONE();
+        TestEntity te = em.getRepository(TestEntity.class).find().where("id = {0}", 1).one();
         Assert.assertNotNull(te);
         te.setTestingEntity(test);
         em.persist(test).persist(te).flush();
@@ -196,7 +196,7 @@ public class TestJDBC {
      */
     @Test
     public void JCheckReplacedEntityForIDOne() {
-        TestEntityOnEntity te = em.getRepository(TestEntity.class).Find().WHERE("id = {0}", 1).ONE().getTestingEntity();
+        TestEntityOnEntity te = em.getRepository(TestEntity.class).find().where("id = {0}", 1).one().getTestingEntity();
         Assert.assertNotNull(te);
         Debug.info(te.getTestValue());
     }
@@ -206,7 +206,7 @@ public class TestJDBC {
      */
     @Test
     public void KTestManyEntities() {
-        TestEntity te = em.getRepository(TestEntity.class).Find().WHERE("id = {0}", 1).ONE();
+        TestEntity te = em.getRepository(TestEntity.class).find().where("id = {0}", 1).one();
         Assert.assertNotNull(te);
 
         TestEntityOnEntity[] entities = te.getTestingEntityArray();
@@ -222,7 +222,7 @@ public class TestJDBC {
      */
     @Test
     public void LModifyManyEntities() {
-        TestEntity te = em.getRepository(TestEntity.class).Find().WHERE("id = {0}", 1).ONE();
+        TestEntity te = em.getRepository(TestEntity.class).find().where("id = {0}", 1).one();
         Assert.assertNotNull(te);
 
         TestEntityOnEntity[] entities = te.getTestingEntityArray();
@@ -240,7 +240,7 @@ public class TestJDBC {
      */
     @Test
     public void MTestModifedEntities() {
-        TestEntity te = em.getRepository(TestEntity.class).Find().WHERE("id = {0}", 1).ONE();
+        TestEntity te = em.getRepository(TestEntity.class).find().where("id = {0}", 1).one();
         Assert.assertNotNull(te);
 
         TestEntityOnEntity[] entities = te.getTestingEntityArray();
@@ -255,7 +255,7 @@ public class TestJDBC {
      */
     @Test
     public void NRemoveEntity() {
-        em.delete(em.getRepository(TestEntity.class).Find().WHERE("id = {0}", 1).ONE());
+        em.delete(em.getRepository(TestEntity.class).find().where("id = {0}", 1).one());
     }
 
     /**
@@ -263,7 +263,7 @@ public class TestJDBC {
      */
     @Test
     public void OTestRemovedEntity() {
-        Assert.assertNull(em.getRepository(TestEntity.class).Find().WHERE("id = {0}", 1).ONE());
+        Assert.assertNull(em.getRepository(TestEntity.class).find().where("id = {0}", 1).one());
     }
 
 }
