@@ -11,10 +11,7 @@ import java.lang.reflect.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * siOnzee.cz
@@ -119,6 +116,11 @@ public class Repository<Type> {
         String query = result.toString();
         try {
             Statement st = entityManager.getDatabase().getConnection().createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, ResultSet.CLOSE_CURSORS_AT_COMMIT);
+            if(query.startsWith("DELETE")) {
+                st.execute(query);
+                entityManager.flush();
+                return Collections.emptySet();
+            }
             ResultSet rs = st.executeQuery(query);
             while (rs.next()) {
                 typeList.add(createType(rs));
@@ -127,5 +129,9 @@ public class Repository<Type> {
             e.printStackTrace();
         }
         return typeList;
+    }
+
+    public QueryBuilder.FROM delete() {
+        return queryBuilder.delete().from(clazz);
     }
 }

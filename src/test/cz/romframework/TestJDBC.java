@@ -264,6 +264,7 @@ public class TestJDBC {
     @Test
     public void OTestRemovedEntity() {
         Assert.assertNull(em.getRepository(TestEntity.class).find().where("id = {0}", 1).one());
+        Assert.assertNull(em.getRepository(TestEntity.class).delete().where("id = {0}", 2).one());
     }
 
 }

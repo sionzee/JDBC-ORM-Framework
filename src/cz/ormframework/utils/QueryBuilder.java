@@ -206,7 +206,7 @@ public class QueryBuilder<Entity> {
         }
     }
 
-    /* --------------------------------------- select, UPDATE, DELETE --------------------------------------- */
+    /* --------------------------------------- SELECT, UPDATE, DELETE --------------------------------------- */
 
 
     /**
@@ -225,7 +225,7 @@ public class QueryBuilder<Entity> {
                 } catch (UnknownValueException e) {
                     e.printStackTrace();
                 }
-            _query = "select ";
+            _query = "SELECT ";
 
             for (String table : params) {
                 if(table.equalsIgnoreCase("*") || table.endsWith("*"))
@@ -247,6 +247,16 @@ public class QueryBuilder<Entity> {
         }
     }
 
+    public class DELETE {
+        public DELETE() {
+            _query = "DELETE ";
+        }
+
+        public FROM from(Class... classes) {
+            return new FROM(_query, classes);
+        }
+    }
+
     /* --------------------------------------- Query Builder --------------------------------------- */
 
     /**
@@ -257,6 +267,10 @@ public class QueryBuilder<Entity> {
      */
     public SELECT select(String... params) {
         return new SELECT(params);
+    }
+
+    public DELETE delete() {
+        return new DELETE();
     }
 
 }
