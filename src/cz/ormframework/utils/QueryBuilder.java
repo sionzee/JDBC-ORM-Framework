@@ -151,7 +151,7 @@ public class QueryBuilder<Entity> {
          * @param ordering the ordering
          * @return the order
          */
-        public ORDER ORDER(String column, ORDERING ordering) {
+        public ORDER order(String column, ORDERING ordering) {
             return new ORDER(_query, column, ordering);
         }
     }
