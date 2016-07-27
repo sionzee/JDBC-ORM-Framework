@@ -1,105 +1,128 @@
-# JDBC ORM Framework
-**Project is in Development stage. [Checkout!](https://gitlab.bukva.cz/siOnzee/JDBC-ORM-FRAMEWORK/tree/develop)**
+JDBC ORM Framework 2.1
+===================
+Framework for administrace entities.
+This framework is created to be user-friendly and **easy** to use.
 
-## Requirements
-- Java 8 (_due to Lambda's functions :p_)
-- Brain
-- Time to learn
+----------
+Requirements
+-------------
+* Java 8
+* **Brain** and time
 
-
-How to use
-_Please do not use this in production, this is still development version. (Or use it on own risk)_
-_Please report all issues. Thanks, __siOnzee__._
-
-1.) Create MySQL Connection
-
+Usage
+-------------
+#### 	![](https://cdn4.iconfinder.com/data/icons/6x16-free-application-icons/16/Refresh.png) Init a database
 ```java
-MySQL mySQL = MySQL.create("id connection", "host", "db", "user", "pass", 3306);
+MySQL databaseInstance = new MySQL(host, database, user, password, port);
+EntityManager entityManager = new EntityManager(databaseInstance);
 ```
 
-2.) Prepare EntityManager
+> **Note:**
+
+> - For a custom connection use custom class which implement IConnection
+> - EntityManager is needed everywere!
+
+
+#### 	![](https://netbeans.org/projects/platform/sources/platform-content/content/trunk/images/tutorials/paintapp/70/new_icon.png) Create a entity
 
 ```java
-EntityManager entityManager = new EntityManager(MySQL.get("id connection"));
-```
-
-3.) Prepare Entities
-Every entity have to implement _Entity_ and have to has field "id"
-Every column which have to be in database, must have annotation _@Column_
-
-```java
-public class User implements Entity {
-
-    @Column
-    private int id;
-
-    @Column
-    private String username;
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-    
-    public String getUsername() {
-        return username;
-    }
-    
-    public int getId() {
-        return id;
-    }
+@Table
+public class User {
+	@Column private int id;
+	@Column private Rank rank;
+	@Column private String name;
+	public int getId() {return this.id;}
+	public void setName(String name) {this.name = name;}
+	public void setRank(Rank rank){this.rank = rank;}
+	public String getName() {return this.name;}
+	public Rank getRank() {return this.rank;}
+}
+@Table
+public class Rank {
+	@Column private int id;
+	@Column private String name;
+	public int getId() {return this.id;}
+	public String getName() {return this.name;}
+	public void setName(String name) {this.name = name;}
 }
 ```
 
-4.) Create Tables
+> **Note:**
+
+> - Entity have to have **@Table** annotation 
+> - Every field which have to be in database must have **@Column** annotation. (**including id**)
+
+#### 	![](http://files.softicons.com/download/toolbar-icons/16x16-free-application-icons-by-aha-soft/png/16x16/Create.png) Create tables
 
 ```java
-TableCreator tc = new TableCreator();
-tc.createTables(mysql, User.class);
+TableCreator tableCreator = entityManager.getTableCreator();
+boolean recreateTables = false;
+
+//Automatically
+tableCreator.createAllTablesInJar(new File("PathToThisJar"), recreateTables);
+
+//Manually
+tableCreator.createTable(User.class, recreateTables);
+tableCreator.createTable(Rank.class, recreateTables);
 ```
+> **Note:**
 
-5.) Time for fun
+> - Path to this Jar you can receive through: **JarUtils.getJarFile(EntityManager.class);**
 
-Insert ....
+#### 	![](http://files.softicons.com/download/toolbar-icons/16x16-free-toolbar-icons-by-aha-soft/png/16/add.png) Insert into a table
+
 ```java
+Rank rank = new Rank();
+rank.setName("Administrator");
+
 User user = new User();
-user.setUsername("Foo");
+user.setName("George");
+user.setRank(rank);
+
+//First persist rank and then user. Why? Firstly needs to be created all inner entities. Then theirs parents.
+entityManager.persist(rank).persist(user).flush();
+```
+
+#### 	![](http://files.softicons.com/download/system-icons/web0.2ama-icons-by-chrfb/png/16x16/Search.png) Select from a database
+```java
+User user = entityManager.getRepository(User.class).Find().Where("id = {0}", 1).ONE();
+print("User " + user.getName() + " have a rank " + user.getRank().getName());
+//User George have a rank Administrator
+```
+
+
+#### 	![](https://cdn2.iconfinder.com/data/icons/aspneticons_v1.0_Nov2006/edit_16x16.gif) Modify value
+```java
+User user = entityManager.getRepository(User.class).Find().Where("id = {0}", 1).ONE();
+user.setName("NewName");
 entityManager.persist(user).flush();
-print("ID: " + user.getId());
 ```
 
-Select ....
+
+#### 	![](http://files.softicons.com/download/toolbar-icons/16x16-free-toolbar-icons-by-aha-soft/png/16/delete-2.png) Remove entity
 ```java
-User user = entityManager.getRepository(User.class).findOneBy("username", "Foo");
-print(user.getUsername();
-print(user.getId());
+User user = entityManager.getRepository(User.class).Find().Where("id = {0}", 1).ONE();
+if(user != null) // Exists
+	entityManager.delete(user);
 ```
+> **Note:**
 
-Update ....
-```java
-User user = entityManager.getRepository(User.class).findOneBy("username", "Foo");
-user.setUsername("Foo2");
-entityManager.persist(user).flush();
-```
+> - When calling a delete, flush is automatically called too.
 
-6.) Links - **NOT WORK**
+#### Supported Types
+* enum
+* boolean
+* String
+* int
+* long
+* byte
+* short
+* float
+* double
+* Date (sql package)
+* Timestamp (sql package)
+* Time (sql package)
+* char
+* Entity
 
-```java
-class User implements Entity {
-
-    @Column
-    private int id;
-    
-    @Column
-    @Linked(node="author_id", value="id")
-    private Collection<Article> articles;
-}
-
-class Article implements Entity {
-
-    @Column
-    private int id;
-    
-    @Column
-    private User author_id;
-}
-```
+And arrays of all supported types!
