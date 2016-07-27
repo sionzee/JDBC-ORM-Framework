@@ -85,7 +85,7 @@ entityManager.persist(rank).persist(user).flush();
 
 #### 	![](http://files.softicons.com/download/system-icons/web0.2ama-icons-by-chrfb/png/16x16/Search.png) Select from a database
 ```java
-User user = entityManager.getRepository(User.class).Find().Where("id = {0}", 1).ONE();
+User user = entityManager.getRepository(User.class).find().where("id = {0}", 1).ONE();
 print("User " + user.getName() + " have a rank " + user.getRank().getName());
 //User George have a rank Administrator
 ```
@@ -93,7 +93,7 @@ print("User " + user.getName() + " have a rank " + user.getRank().getName());
 
 #### 	![](https://cdn2.iconfinder.com/data/icons/aspneticons_v1.0_Nov2006/edit_16x16.gif) Modify value
 ```java
-User user = entityManager.getRepository(User.class).Find().Where("id = {0}", 1).ONE();
+User user = entityManager.getRepository(User.class).find().where("id = {0}", 1).ONE();
 user.setName("NewName");
 entityManager.persist(user).flush();
 ```
@@ -101,13 +101,17 @@ entityManager.persist(user).flush();
 
 #### 	![](http://files.softicons.com/download/toolbar-icons/16x16-free-toolbar-icons-by-aha-soft/png/16/delete-2.png) Remove entity
 ```java
-User user = entityManager.getRepository(User.class).Find().Where("id = {0}", 1).ONE();
+User user = entityManager.getRepository(User.class).find().where("id = {0}", 1).ONE();
 if(user != null) // Exists
 	entityManager.delete(user);
+//another method
+entityManager.getRepository(User.class).delete().where("id = {0}", 1).one();
+
+entityManager.flush();
 ```
 > **Note:**
 
-> - When calling a delete, flush is automatically called too.
+> - When calling a delete, don't forget for a flush!
 
 #### Supported Types
 * enum
