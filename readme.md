@@ -1,6 +1,6 @@
 JDBC ORM Framework 2.1
 ===================
-Framework for administrace entities.
+Framework for administration entities.
 This framework is created to be user-friendly and **easy** to use.
 
 ----------
@@ -20,7 +20,7 @@ EntityManager entityManager = new EntityManager(databaseInstance);
 > **Note:**
 
 > - For a custom connection use custom class which implement IConnection
-> - EntityManager is needed everywere!
+> - EntityManager is needed everywhere!
 
 
 #### 	![](https://netbeans.org/projects/platform/sources/platform-content/content/trunk/images/tutorials/paintapp/70/new_icon.png) Create a entity
