@@ -150,7 +150,7 @@ public class TestJDBC {
      */
     @Test(timeout = 4000L)
     public void FSelectFilter() {
-        TestEntity te = em.getRepository(TestEntity.class).find().where("id = {0}", 5).ORDER("id", QueryBuilder.ORDERING.ASC).one();
+        TestEntity te = em.getRepository(TestEntity.class).find().where("id = {0}", 5).order("id", QueryBuilder.ORDERING.ASC).one();
         Assert.assertNotNull(te);
     }
 
@@ -256,6 +256,8 @@ public class TestJDBC {
     @Test
     public void NRemoveEntity() {
         em.delete(em.getRepository(TestEntity.class).find().where("id = {0}", 1).one());
+        em.getRepository(TestEntity.class).delete().where("id = {0}", 2).one();
+        em.flush();
     }
 
     /**
@@ -264,7 +266,7 @@ public class TestJDBC {
     @Test
     public void OTestRemovedEntity() {
         Assert.assertNull(em.getRepository(TestEntity.class).find().where("id = {0}", 1).one());
-        Assert.assertNull(em.getRepository(TestEntity.class).delete().where("id = {0}", 2).one());
+        Assert.assertNull(em.getRepository(TestEntity.class).find().where("id = {0}", 2).one());
     }
 
 }
