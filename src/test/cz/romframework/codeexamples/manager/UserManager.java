@@ -1,6 +1,7 @@
 package test.cz.romframework.codeexamples.manager;
 
 import cz.ormframework.EntityManager;
+import cz.ormframework.log.Debug;
 
 import java.util.HashMap;
 import java.util.Random;
@@ -24,7 +25,7 @@ public class UserManager {
     }
 
     private void onDelete(User u) {
-        users.remove(u);
+        users.remove(u.getUsername());
     }
 
     public void addUser(String username) {
