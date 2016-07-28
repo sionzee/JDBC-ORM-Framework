@@ -11,7 +11,7 @@ Requirements
 
 Usage
 -------------
-#### 	![](https://cdn4.iconfinder.com/data/icons/6x16-free-application-icons/16/Refresh.png) Init a database
+#### <img align="left" src="https://cdn4.iconfinder.com/data/icons/6x16-free-application-icons/16/Refresh.png" />&nbsp;Init a database
 ```java
 MySQL databaseInstance = new MySQL(host, database, user, password, port);
 EntityManager entityManager = new EntityManager(databaseInstance);
@@ -23,7 +23,7 @@ EntityManager entityManager = new EntityManager(databaseInstance);
 > - EntityManager is needed everywhere!
 
 
-#### 	![](https://netbeans.org/projects/platform/sources/platform-content/content/trunk/images/tutorials/paintapp/70/new_icon.png) Create a entity
+#### <img align="left" src="https://netbeans.org/projects/platform/sources/platform-content/content/trunk/images/tutorials/paintapp/70/new_icon.png" />&nbsp;Create an entity
 
 ```java
 @Table
@@ -52,7 +52,7 @@ public class Rank {
 > - Entity have to have **@Table** annotation 
 > - Every field which have to be in database must have **@Column** annotation. (**including id**)
 
-#### 	![](http://files.softicons.com/download/toolbar-icons/16x16-free-application-icons-by-aha-soft/png/16x16/Create.png) Create tables
+#### <img align="left" src="http://files.softicons.com/download/toolbar-icons/16x16-free-application-icons-by-aha-soft/png/16x16/Create.png" />&nbsp;Create tables
 
 ```java
 TableCreator tableCreator = entityManager.getTableCreator();
@@ -69,7 +69,7 @@ tableCreator.createTable(Rank.class, recreateTables);
 
 > - Path to this Jar you can receive through: **JarUtils.getJarFile(EntityManager.class);**
 
-#### 	![](http://files.softicons.com/download/toolbar-icons/16x16-free-toolbar-icons-by-aha-soft/png/16/add.png) Insert into a table
+#### <img align="left" src="http://files.softicons.com/download/toolbar-icons/16x16-free-toolbar-icons-by-aha-soft/png/16/add.png" />&nbsp;Insert into a table
 
 ```java
 Rank rank = new Rank();
@@ -83,15 +83,24 @@ user.setRank(rank);
 entityManager.persist(rank).persist(user).flush();
 ```
 
-#### 	![](http://files.softicons.com/download/system-icons/web0.2ama-icons-by-chrfb/png/16x16/Search.png) Select from a database
+> **Note:**
+
+> - On persist is automatically assigned ID to the user entity.
+
+#### <img align="left" src="http://files.softicons.com/download/system-icons/web0.2ama-icons-by-chrfb/png/16x16/Search.png" />&nbsp;Select from a database
 ```java
 User user = entityManager.getRepository(User.class).find().where("id = {0}", 1).ONE();
-print("User " + user.getName() + " have a rank " + user.getRank().getName());
-//User George have a rank Administrator
+if(user != null) {
+    print("User " + user.getName() + " have a rank " + user.getRank().getName());
+    //User George have a rank Administrator
+} else {
+    print("User ID: " + 1 + " not found!"); 
+    //User ID: 1 not found!
+}
 ```
 
 
-#### 	![](https://cdn2.iconfinder.com/data/icons/aspneticons_v1.0_Nov2006/edit_16x16.gif) Modify value
+#### <img align="left" src="https://cdn2.iconfinder.com/data/icons/aspneticons_v1.0_Nov2006/edit_16x16.gif" />&nbsp;Modify value
 ```java
 User user = entityManager.getRepository(User.class).find().where("id = {0}", 1).ONE();
 user.setName("NewName");
@@ -99,12 +108,13 @@ entityManager.persist(user).flush();
 ```
 
 
-#### 	![](http://files.softicons.com/download/toolbar-icons/16x16-free-toolbar-icons-by-aha-soft/png/16/delete-2.png) Remove entity
+#### <img align="left" src="http://files.softicons.com/download/toolbar-icons/16x16-free-toolbar-icons-by-aha-soft/png/16/delete-2.png" />&nbsp;Remove an entity
 ```java
 User user = entityManager.getRepository(User.class).find().where("id = {0}", 1).ONE();
 if(user != null) // Exists
 	entityManager.delete(user);
-//another method
+	
+//second way
 entityManager.getRepository(User.class).delete().where("id = {0}", 1).one();
 
 entityManager.flush();
@@ -127,6 +137,6 @@ entityManager.flush();
 * Timestamp (sql package)
 * Time (sql package)
 * char
-* Entity
+* entity
 
 And arrays of all supported types!
