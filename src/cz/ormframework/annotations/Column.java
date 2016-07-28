@@ -49,11 +49,4 @@ public @interface Column {
      * @return true for indexing
      */
     boolean indexed() default false;
-
-    /**
-     * Is Array or List?
-     *
-     * @return true for collection
-     */
-    boolean isCollection() default false;
 }
