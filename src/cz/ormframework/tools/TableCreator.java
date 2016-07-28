@@ -7,6 +7,7 @@ import cz.ormframework.events.objects.ExecuteQueryEvent;
 import cz.ormframework.events.objects.QueryDoneEvent;
 import cz.ormframework.log.Debug;
 import cz.ormframework.utils.EntityUtils;
+import cz.ormframework.utils.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,6 +23,7 @@ import java.util.regex.Pattern;
  */
 public class TableCreator {
 
+    private List<Class<?>> tables;
     private EntityManager entityManager;
 
     /**
@@ -31,121 +33,9 @@ public class TableCreator {
      */
     public TableCreator(EntityManager entityManager) {
         this.entityManager = entityManager;
+        tables = new ArrayList<>();
     }
 
-    /**
-     * Create all tables in jar.
-     *
-     * @param jar      the jar
-     * @param recreate the recreate
-     */
-    public void createAllTablesInJar(File jar, boolean recreate) {
-        JarFile jarFile = null;
-        try {
-            jarFile = new JarFile(jar);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        assert jarFile != null;
-        Collections.list(jarFile.entries()).forEach(jarEntry -> {
-            if (jarEntry.getName().endsWith(".class")) {
-                String className = jarEntry.getName().replace("/", ".").replace(".class", "");
-                try {
-                    Class<?> clazz = Class.forName(className);
-                    if (EntityUtils.getTable(clazz) != null)
-                        tables.add(clazz);
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        });
-
-        finishTables( recreate);
-    }
-
-    private void finishTables(boolean recreate) {
-
-        tables.forEach(clazz -> createTable(clazz, recreate));
-
-
-        tables.forEach(clazz -> Arrays.stream(clazz.getDeclaredFields()).forEach(field -> {
-            if (EntityUtils.getTable(field.getType()) != null && EntityUtils.isIndexed(field)) {
-                String indexID = createIndexName("`" + EntityUtils.getTable(clazz) + "`.`" + EntityUtils.getColumn(field) + "` ON `" + EntityUtils.getTable(field.getType()) + "`.`id`");
-                executeQuery("ALTER TABLE `" + EntityUtils.getTable(clazz) + "` ADD INDEX `" + indexID + "` (`" + EntityUtils.getColumn(field) + "`) ");
-            }
-        }));
-
-        tables.forEach(clazz -> Arrays.stream(clazz.getDeclaredFields()).forEach(field -> {
-            if (EntityUtils.getTable(field.getType()) != null && EntityUtils.isIndexed(field)) {
-                String indexID = "fk_" + createIndexName("`" + EntityUtils.getTable(clazz) + "`.`" + EntityUtils.getColumn(field) + "` ON `" + EntityUtils.getTable(field.getType()) + "`.`id`");
-                executeQuery("ALTER TABLE `" + EntityUtils.getTable(clazz) + "` ADD CONSTRAINT `" + indexID + "` FOREIGN KEY (`" + EntityUtils.getColumn(field) + "`) REFERENCES " + EntityUtils.getTable(field.getType()) + "(`id`) ON UPDATE CASCADE ON DELETE CASCADE");
-            }
-        }));
-
-    }
-
-    /**
-     * The Table or column pattern.
-     */
-    public Pattern TABLE_OR_COLUMN_PATTERN = Pattern.compile("`(.*?)`");
-
-    private String createIndexName(String string) {
-        String[] part = string.split(" ON ");
-
-        String[] part1 = part[0].split("\\.");
-        String[] part2 = part[1].split("\\.");
-
-        String table1 = part1[0].substring(1, part1[0].length() - 1);
-        String value1 = part1[1].substring(1, part1[1].length() - 1);
-
-        String table2 = part2[0].substring(1, part2[0].length() - 1);
-        String value2 = part2[1].substring(1, part2[1].length() - 1);
-        return table1.toLowerCase() + firstUpper(value1) + "_" + table2.toLowerCase() + firstUpper(value2);
-    }
-
-    private String firstUpper(String string) {
-        return string.substring(0, 1).toUpperCase() + string.toLowerCase().substring(1, string.length());
-    }
-
-    /**
-     * Gets tables.
-     *
-     * @return the tables
-     */
-    public List<Class<?>> getTables() {
-        return tables;
-    }
-
-    private void executeQuery(String result) {
-        int queryID = entityManager.getQueryId();
-
-        Statement statement;
-        try {
-            statement = entityManager.getDatabase().getConnection().createStatement();
-
-            ExecuteQueryEvent executeQueryEvent = new ExecuteQueryEvent(queryID, Thread.currentThread().getStackTrace()[0], result, statement);
-            EventManager.FireEvent(executeQueryEvent);
-            if (executeQueryEvent.isCancelled()) {
-                return;
-            }
-
-            statement.execute(result);
-
-            QueryDoneEvent queryDoneEvent = new QueryDoneEvent(queryID, null, result);
-            EventManager.FireEvent(queryDoneEvent);
-            statement.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private LinkedHashMap<String, List<Class<?>>> map = new LinkedHashMap<>();
-
-    private List<Class<?>> tables = new ArrayList<>();
-
-    private List<String> createdTables = new ArrayList<>();
 
     /**
      * Create table.
@@ -217,6 +107,106 @@ public class TableCreator {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Create all tables in jar.
+     *
+     * @param jar      the jar
+     * @param recreate the recreate
+     */
+    public void createAllTablesInJar(File jar, boolean recreate) {
+        JarFile jarFile = null;
+        try {
+            jarFile = new JarFile(jar);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        assert jarFile != null;
+        Collections.list(jarFile.entries()).forEach(jarEntry -> {
+            if (jarEntry.getName().endsWith(".class")) {
+                String className = jarEntry.getName().replace("/", ".").replace(".class", "");
+                try {
+                    Class<?> clazz = Class.forName(className);
+                    if (EntityUtils.getTable(clazz) != null)
+                        tables.add(clazz);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        });
+
+        finishTables( recreate);
+    }
+
+
+    /**
+     * Gets tables.
+     *
+     * @return the tables
+     */
+    public List<Class<?>> getTables() {
+        return tables;
+    }
+
+    private void executeQuery(String result) {
+        int queryID = entityManager.getQueryId();
+
+        Statement statement;
+        try {
+            statement = entityManager.getDatabase().getConnection().createStatement();
+
+            ExecuteQueryEvent executeQueryEvent = new ExecuteQueryEvent(queryID, Thread.currentThread().getStackTrace()[0], result, statement);
+            EventManager.FireEvent(executeQueryEvent);
+            if (executeQueryEvent.isCancelled()) {
+                return;
+            }
+
+            statement.execute(result);
+
+            QueryDoneEvent queryDoneEvent = new QueryDoneEvent(queryID, null, result);
+            EventManager.FireEvent(queryDoneEvent);
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void finishTables(boolean recreate) {
+
+        tables.forEach(clazz -> createTable(clazz, recreate));
+
+
+        tables.forEach(clazz -> Arrays.stream(clazz.getDeclaredFields()).forEach(field -> {
+            if (EntityUtils.getTable(field.getType()) != null && EntityUtils.isIndexed(field)) {
+                String indexID = createIndexName("`" + EntityUtils.getTable(clazz) + "`.`" + EntityUtils.getColumn(field) + "` ON `" + EntityUtils.getTable(field.getType()) + "`.`id`");
+                executeQuery("ALTER TABLE `" + EntityUtils.getTable(clazz) + "` ADD INDEX `" + indexID + "` (`" + EntityUtils.getColumn(field) + "`) ");
+            }
+        }));
+
+        tables.forEach(clazz -> Arrays.stream(clazz.getDeclaredFields()).forEach(field -> {
+            if (EntityUtils.getTable(field.getType()) != null && EntityUtils.isIndexed(field)) {
+                String indexID = "fk_" + createIndexName("`" + EntityUtils.getTable(clazz) + "`.`" + EntityUtils.getColumn(field) + "` ON `" + EntityUtils.getTable(field.getType()) + "`.`id`");
+                executeQuery("ALTER TABLE `" + EntityUtils.getTable(clazz) + "` ADD CONSTRAINT `" + indexID + "` FOREIGN KEY (`" + EntityUtils.getColumn(field) + "`) REFERENCES " + EntityUtils.getTable(field.getType()) + "(`id`) ON UPDATE CASCADE ON DELETE CASCADE");
+            }
+        }));
+
+    }
+
+    private String createIndexName(String string) {
+        String[] part = string.split(" ON ");
+
+        String[] part1 = part[0].split("\\.");
+        String[] part2 = part[1].split("\\.");
+
+        String table1 = part1[0].substring(1, part1[0].length() - 1);
+        String value1 = part1[1].substring(1, part1[1].length() - 1);
+
+        String table2 = part2[0].substring(1, part2[0].length() - 1);
+        String value2 = part2[1].substring(1, part2[1].length() - 1);
+        return table1.toLowerCase() + StringUtils.firstUpper(value1) + "_" + table2.toLowerCase() + StringUtils.firstUpper(value2);
     }
 
 }

@@ -13,7 +13,9 @@ import java.util.regex.Pattern;
  * JDBC ORM Framework Release
  */
 public class Debug {
-    private static String[] blockedPackages = new String[]{"net.minecraft.server", "org.bukkit", "com.mysql.jdbc", "java.", "sun."};
+    private static final Pattern TABLE_OR_COLUMN_PATTERN = Pattern.compile("`(.*?)`");
+    private static final Pattern VALUE_PATTERN = Pattern.compile("'(.*?)'");
+    private static final String[] blockedPackages = new String[]{"net.minecraft.server", "org.bukkit", "com.mysql.jdbc", "java.", "sun."};
 
     /**
      * Exception.
@@ -58,9 +60,6 @@ public class Debug {
     public static void error(String message) {
         System.out.println("\n[" + Colors.RED + "ERROR" + Colors.RESET + "] " + message + Colors.RESET);
     }
-
-    private static Pattern TABLE_OR_COLUMN_PATTERN = Pattern.compile("`(.*?)`");
-    private static Pattern VALUE_PATTERN = Pattern.compile("'(.*?)'");
 
     private static String colorizeQuery(String query) {
         query = Colors.LIGHT + Colors.WHITE + query;
