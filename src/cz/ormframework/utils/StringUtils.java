@@ -13,8 +13,13 @@ public class StringUtils {
         return string.substring(0, 1).toUpperCase() + string.toLowerCase().substring(1, string.length());
     }
 
+    static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    static SecureRandom rnd = new SecureRandom();
+
     public static String randomString(int size) {
-        SecureRandom sr = new SecureRandom();
-        return new BigInteger(size, sr).toString(32);
+        StringBuilder sb = new StringBuilder(size);
+        for(int i = 0; i < size; i++ )
+            sb.append(AB.charAt(rnd.nextInt(AB.length())));
+        return sb.toString();
     }
 }
