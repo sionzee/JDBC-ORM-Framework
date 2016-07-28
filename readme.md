@@ -8,6 +8,7 @@ Requirements
 -------------
 * Java 8
 * **Brain** and time
+* SQL knowledge
 
 Usage
 -------------
