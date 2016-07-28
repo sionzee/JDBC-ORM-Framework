@@ -17,6 +17,8 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Random;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * siOnzee.cz
@@ -268,5 +270,28 @@ public class TestJDBC {
         Assert.assertNull(em.getRepository(TestEntity.class).find().where("id = {0}", 1).one());
         Assert.assertNull(em.getRepository(TestEntity.class).find().where("id = {0}", 2).one());
     }
+    @Test
+    public void PCheckThreadSafeEntity() {
+        TestEntity te = em.getRepository(TestEntity.class).find().where("id = {0}", 3).one();
 
+        Debug.info("TE-Boolean: " + te.getTestingBoolean());
+        ModifyThread mt = new ModifyThread(em, te, false, true);
+        try {
+            mt.start();
+            mt.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        Debug.info("TE-Boolean: " + te.getTestingBoolean());
+
+        mt = new ModifyThread(em, te, true, false);
+        try {
+            mt.start();
+            mt.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        em.persist(te).flush();
+        Debug.info("TE-Boolean: " + te.getTestingBoolean());
+    }
 }
