@@ -126,7 +126,7 @@ public class Debug {
             }
 
             if (value != null && EntityUtils.getTable(field.getType()) != null && printInnerEntities) {
-                s.append("[Column: ").append(Colors.LIGHT + Colors.CYAN).append(EntityUtils.getColumn(field)).append(Colors.RESET).append(", Type: ").append(EntityUtils.getDBType(field)).append(", ").append("Length: ").append(EntityUtils.getColumn(field).length()).append(", isNullable: ").append(EntityUtils.getColumn(field).isNullable()).append(", ");
+                s.append("[Column: ").append(Colors.LIGHT + Colors.CYAN).append(EntityUtils.getColumn(field)).append(Colors.RESET).append(", Type: ").append(EntityUtils.getDBType(field)).append(", ").append("Length: ").append(EntityUtils.getColumn(field).length()).append(", nullable: ").append(EntityUtils.getColumn(field).nullable()).append(", ");
                 s.append(field.getName()).append(": ").append(Colors.CYAN).append(value.getClass().getSimpleName()).append("@").append(Integer.toHexString(value.hashCode()));
                 s.append(Colors.RESET).append("]\n");
                 s.append(getEntityInfo(value, value.getClass().getSimpleName() + "@" + Integer.toHexString(value.hashCode()), tabNumber + 1, true));
@@ -135,7 +135,7 @@ public class Debug {
                 if (name != null)
                     for (int i = 0; i < tabNumber; i++)
                         s.append("\t");
-                s.append("[Column: ").append(Colors.LIGHT + Colors.CYAN).append(EntityUtils.getColumn(field)).append(Colors.RESET).append(", Type: ").append(EntityUtils.getDBType(field)).append(", ").append("Length: ").append(EntityUtils.getColumn(field).length()).append(", isNullable: ").append(EntityUtils.getColumn(field).isNullable()).append(", ");
+                s.append("[Column: ").append(Colors.LIGHT + Colors.CYAN).append(EntityUtils.getColumn(field)).append(Colors.RESET).append(", Type: ").append(EntityUtils.getDBType(field)).append(", ").append("Length: ").append(EntityUtils.getColumn(field).length()).append(", nullable: ").append(EntityUtils.getColumn(field).nullable()).append(", ");
 
                 s.append(field.getName()).append(": ").append(Colors.CYAN).append(value).append(Colors.RESET).append("]\n");
             }

@@ -177,7 +177,7 @@ public class TableCreator {
             if (columnName != null && !Objects.equals(columnName, "id")) {
                 String type = EntityUtils.getDBType(field);
                 int length = column.length();
-                boolean nullable = column.isNullable();
+                boolean nullable = column.nullable();
                 query.append("`").append(columnName).append("` ").append(type);
                 if (length > 0)
                     query.append("(").append(length).append(") ");

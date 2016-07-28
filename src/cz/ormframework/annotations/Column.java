@@ -25,7 +25,7 @@ public @interface Column {
      *
      * @return Default true
      */
-    boolean isNullable() default true;
+    boolean nullable() default true;
 
     /**
      * Column type (int, varchar, timestamp...) or match default by Repository
