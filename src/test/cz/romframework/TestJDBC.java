@@ -7,11 +7,14 @@ import cz.ormframework.events.objects.QueryDoneEvent;
 import cz.ormframework.log.Debug;
 import cz.ormframework.utils.EntityUtils;
 import cz.ormframework.utils.QueryBuilder;
+import cz.ormframework.utils.StringUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+import test.cz.romframework.codeexamples.manager.User;
+import test.cz.romframework.codeexamples.manager.UserManager;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -293,5 +296,25 @@ public class TestJDBC {
         }
         em.persist(te).flush();
         Debug.info("TE-Boolean: " + te.getTestingBoolean());
+    }
+
+    @Test
+    public void ZCodeExampleWithTest() {
+        em.getTableCreator().createTable(User.class, true);
+        UserManager um = new UserManager(em);
+        for(int i = 0; i < 200; i++) {
+            um.addUser(StringUtils.randomString(new Random().nextInt(20)));
+        }
+
+        em.flush();
+
+        um.filter(u -> u.getAge() > 80).forEach(user -> {
+            Debug.info("User " + user.getUsername() + " is going to dead, he is " + user.getAge() + " years old.");
+        });
+
+        um.filter(u -> u.getAge() >= 100).forEach(user -> {
+            Debug.info("User " + user.getUsername() + " is dead, removing.");
+            um.removeUser(user);
+        });
     }
 }
