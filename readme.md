@@ -87,7 +87,7 @@ entityManager.persist(rank).persist(user).flush();
 
 > - On persist is automatically assigned ID to the user entity.
 
-#### <img align="left" src="http://files.softicons.com/download/system-icons/web0.2ama-icons-by-chrfb/png/16x16/Search.png" />&nbsp;Select from a database
+#### <img align="left" src="http://findicons.com/files/icons/949/token/16/search.png" />&nbsp;Select from a database
 ```java
 User user = entityManager.getRepository(User.class).find().where("id = {0}", 1).ONE();
 if(user != null) {
@@ -108,7 +108,7 @@ entityManager.persist(user).flush();
 ```
 
 
-#### <img align="left" src="http://files.softicons.com/download/toolbar-icons/16x16-free-toolbar-icons-by-aha-soft/png/16/delete-2.png" />&nbsp;Remove an entity
+#### <img align="left" src="https://cdn2.iconfinder.com/data/icons/aspneticons_v1.0_Nov2006/delete_16x16.gif" />&nbsp;Remove an entity
 ```java
 User user = entityManager.getRepository(User.class).find().where("id = {0}", 1).ONE();
 if(user != null) // Exists
