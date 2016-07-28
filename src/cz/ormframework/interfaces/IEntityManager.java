@@ -14,10 +14,10 @@ public interface IEntityManager {
      * Persiste a Entity, to commit need to call flush();
      *
      * @param <Type> Return Entity
-     * @param entity Entity
+     * @param entities Entities
      * @return Returns IEntityManager for next persists or flushes.
      */
-    <Type> IEntityManager persist(@NotNull Type entity);
+    <Type> IEntityManager persist(@NotNull Type... entities);
 
     /**
      * Return a repository for a Entity
