@@ -4,8 +4,10 @@ import com.sun.istack.internal.NotNull;
 import cz.ormframework.annotations.Table;
 import cz.ormframework.database.Database;
 import cz.ormframework.events.EventManager;
+import cz.ormframework.events.interfaces.Callback;
 import cz.ormframework.events.objects.ExecuteQueryEvent;
 import cz.ormframework.events.objects.QueryDoneEvent;
+import cz.ormframework.interfaces.ICallback;
 import cz.ormframework.interfaces.IEntityManager;
 import cz.ormframework.log.Debug;
 import cz.ormframework.parsers.Parser;
@@ -13,13 +15,16 @@ import cz.ormframework.repositories.Repository;
 import cz.ormframework.tools.TableCreator;
 import cz.ormframework.utils.EntityUtils;
 import cz.ormframework.utils.Formatter;
+import test.cz.romframework.codeexamples.manager.User;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * siOnzee.cz
@@ -33,6 +38,16 @@ public class EntityManager implements IEntityManager {
     private PreparedStatement statement;
     private TableCreator tableCreator;
     private int queryId;
+    private HashMap<Class<?>, List<ICallback>> onDelete;
+
+    public <Type> void registerDeleteOn(Class<Type> clazz, ICallback<Type> callback) {
+        if(onDelete.containsKey(clazz)) {
+            onDelete.get(clazz).add(callback);
+        } else {
+            onDelete.put(clazz, new ArrayList<>());
+            registerDeleteOn(clazz, callback);
+        }
+    }
 
     @Override
     public TableCreator getTableCreator() {
@@ -54,6 +69,7 @@ public class EntityManager implements IEntityManager {
             Debug.warning("EntityManager new instance detected on Main Thread!\nPlease use another Thread! (Protection before lags caused by connection)");
         this.database = database;
         this.tableCreator = new TableCreator(this);
+        this.onDelete = new HashMap<>();
         try {
             reopenConnectionOnClose();
             getDatabase().getConnection().setAutoCommit(false);
@@ -228,6 +244,8 @@ public class EntityManager implements IEntityManager {
         try {
             this.statement = getDatabase().getConnection().prepareStatement(result);
             this.statement.execute();
+            if(onDelete.containsKey(clazz))
+                onDelete.get(clazz).forEach(c -> c.execute(entity));
         } catch (SQLException e) {
             Debug.exception(e);
         }
