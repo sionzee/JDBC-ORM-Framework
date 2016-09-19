@@ -4,7 +4,6 @@ import com.sun.istack.internal.NotNull;
 import cz.ormframework.annotations.Table;
 import cz.ormframework.database.Database;
 import cz.ormframework.events.EventManager;
-import cz.ormframework.events.interfaces.Callback;
 import cz.ormframework.events.objects.ExecuteQueryEvent;
 import cz.ormframework.events.objects.QueryDoneEvent;
 import cz.ormframework.interfaces.ICallback;
@@ -15,7 +14,6 @@ import cz.ormframework.repositories.Repository;
 import cz.ormframework.tools.TableCreator;
 import cz.ormframework.utils.EntityUtils;
 import cz.ormframework.utils.Formatter;
-import test.cz.romframework.codeexamples.manager.User;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -254,6 +252,24 @@ public class EntityManager implements IEntityManager {
         return this;
     }
 
+    private boolean isStatementClosed() {
+        try {
+            return statement == null || statement.isClosed();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    private PreparedStatement createPreparedStatement() {
+        try {
+            return getDatabase().getConnection().prepareStatement("");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public <Type> Repository<Type> getRepository(@NotNull Class<Type> clazz) {
@@ -266,6 +282,15 @@ public class EntityManager implements IEntityManager {
         }
 
         reopenConnectionOnClose();
+
+        if(isStatementClosed())
+            if((this.statement = createPreparedStatement()) == null) {
+                try {
+                    throw new Exception("createPreparedStatement() returned null, cannot open Statement");
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
 
         String table = EntityUtils.getTable(clazz);
 
