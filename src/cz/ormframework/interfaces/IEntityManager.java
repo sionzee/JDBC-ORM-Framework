@@ -4,6 +4,8 @@ import com.sun.istack.internal.NotNull;
 import cz.ormframework.database.Database;
 import cz.ormframework.repositories.Repository;
 import cz.ormframework.tools.TableCreator;
+import test.cz.romframework.codeexamples.manager.User;
+import test.cz.romframework.repositories.UserRepository;
 
 /**
  * siOnzee.cz
@@ -51,4 +53,6 @@ public interface IEntityManager {
      * Open or ReOpen closed connection
      */
     void reopenConnectionOnClose();
+
+    <EntityType, Type extends Repository<EntityType>> Type registerRepository(Class<Type> repositoryClass, Class<EntityType> entityClass);
 }

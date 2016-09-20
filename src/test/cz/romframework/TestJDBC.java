@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import test.cz.romframework.codeexamples.manager.User;
 import test.cz.romframework.codeexamples.manager.UserManager;
+import test.cz.romframework.repositories.UserRepository;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -39,14 +40,16 @@ public class TestJDBC {
      */
     EntityManager em;
 
+    UserRepository userRepository;
+
     /**
      * Init.
      */
     @Before
     public void Init() {
-        mysql = new MySQL("localhost", "minecraft", "sionzee", "123456", 3306);
+        mysql = new MySQL("localhost", "minecraft", "sionzee", System.getenv("MYSQL_PASSWORD"), 3306);
         em = new EntityManager(mysql);
-
+        userRepository = em.registerRepository(UserRepository.class, User.class);
     }
 
     /**
@@ -316,5 +319,16 @@ public class TestJDBC {
             Debug.info("User " + user.getUsername() + " is dead, removing.");
             um.removeUser(user);
         });
+    }
+
+    @Test
+    public void ZYATestRepository() {
+        User user = new User();
+        user.setUsername("TestUsername");
+        user.setAge(10);
+        em.persist(user).flush();
+
+        user = userRepository.getUserByName("TestUsername");
+        Assert.assertNotNull(user);
     }
 }

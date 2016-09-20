@@ -15,6 +15,7 @@ import cz.ormframework.tools.TableCreator;
 import cz.ormframework.utils.EntityUtils;
 import cz.ormframework.utils.Formatter;
 
+import java.lang.reflect.InvocationTargetException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -31,7 +32,7 @@ import java.util.List;
 public class EntityManager implements IEntityManager {
 
     private int queryID = 0;
-    private final HashMap<String, Repository> cache = new HashMap<>();
+    private final HashMap<String, Repository<?>> cache = new HashMap<>();
     private Database database;
     private PreparedStatement statement;
     private TableCreator tableCreator;
@@ -270,6 +271,18 @@ public class EntityManager implements IEntityManager {
         return null;
     }
 
+    @Override
+    public <EntityType, Type extends Repository<EntityType>> Type registerRepository(Class<Type> repositoryClass, Class<EntityType> entityClass) {
+        try {
+            Type repositoryInstance = repositoryClass.getDeclaredConstructor(Class.class, EntityManager.class).newInstance(entityClass, this);
+            cache.put(EntityUtils.getTable(entityClass), repositoryInstance);
+            return (Type) cache.get(EntityUtils.getTable(entityClass));
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public <Type> Repository<Type> getRepository(@NotNull Class<Type> clazz) {
@@ -295,10 +308,10 @@ public class EntityManager implements IEntityManager {
         String table = EntityUtils.getTable(clazz);
 
         if (cache.containsKey(table))
-            return cache.<Type>get(table);
+            return (Repository<Type>) cache.<Type>get(table);
 
         cache.put(table, new Repository<Type>(clazz, this));
-        return cache.<Type>get(table);
+        return (Repository<Type>) cache.<Type>get(table);
     }
 
     @Override
