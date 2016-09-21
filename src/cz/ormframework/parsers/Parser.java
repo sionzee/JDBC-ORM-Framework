@@ -194,7 +194,7 @@ public class Parser {
                     type = "enum";
                 switch (type) {
                     case "boolean":
-                        field.set(entity, unparseBooleanArray(String.valueOf(type)));
+                        field.set(entity, unparseBooleanArray(String.valueOf(value)));
                         break;
                     case "string":
                         field.set(entity, unparseArray(String.valueOf(value)));
