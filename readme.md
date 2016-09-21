@@ -145,7 +145,7 @@ UserRepository userRepository = em.registerRepository(UserRepository.class, User
 //And now usage :-)
 User user = userRepository.getUserByName("George");
 if(user == null)
-    ...    
+    //CODE  
 ```
 
 #### <img align="left" src="https://cdn0.iconfinder.com/data/icons/16x16-free-toolbar-icons/16/13.png" />&nbsp;Register a listener
@@ -157,6 +157,9 @@ EntityUpdateEvent.getHandlerList().addListener(event -> {
     //Update will be cancelled! :)
 });
 ```
+> **Note:**
+
+> - Events are only called when they're enabled in constructor
 
 #### Supported Types
 * enum
