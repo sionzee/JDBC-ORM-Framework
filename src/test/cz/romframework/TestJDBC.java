@@ -2,11 +2,10 @@ package test.cz.romframework;
 
 import cz.ormframework.EntityManager;
 import cz.ormframework.database.MySQL;
-import cz.ormframework.events.objects.ExecuteQueryEvent;
 import cz.ormframework.events.objects.QueryDoneEvent;
 import cz.ormframework.log.Debug;
 import cz.ormframework.utils.EntityUtils;
-import cz.ormframework.utils.QueryBuilder;
+import cz.ormframework.builder.QueryBuilder;
 import cz.ormframework.utils.StringUtils;
 import org.junit.Assert;
 import org.junit.Before;
@@ -19,12 +18,8 @@ import test.cz.romframework.repositories.UserRepository;
 
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Random;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.stream.Stream;
 
 /**
  * siOnzee.cz
@@ -59,18 +54,12 @@ public class TestJDBC {
      */
     @Test
     public void ARegisterEvents() {
-        ExecuteQueryEvent.getHandlerList().addListener(this::onExecute);
         QueryDoneEvent.getHandlerList().addListener(this::onDone);
     }
 
     private void onDone(QueryDoneEvent event) {
         Debug.info(EntityUtils.getId(event.getEntity()) + " - " + event.getQuery());
     }
-
-    private void onExecute(ExecuteQueryEvent event) {
-
-    }
-
 
     /**
      * B create table.
