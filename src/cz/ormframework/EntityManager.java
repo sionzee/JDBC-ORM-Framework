@@ -35,6 +35,10 @@ public class EntityManager implements IEntityManager {
     private int queryId;
     private boolean enableEvents = true;
 
+    public boolean areEventsEnabled() {
+        return enableEvents;
+    }
+
     @Override
     public TableCreator getTableCreator() {
         return tableCreator;
