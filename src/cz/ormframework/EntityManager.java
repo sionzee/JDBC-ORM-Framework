@@ -2,6 +2,7 @@ package cz.ormframework;
 
 import com.sun.istack.internal.NotNull;
 import cz.ormframework.annotations.Table;
+import cz.ormframework.builder.DefaultQueryBuilder;
 import cz.ormframework.database.Database;
 import cz.ormframework.events.EventManager;
 import cz.ormframework.events.objects.*;
@@ -14,6 +15,7 @@ import cz.ormframework.repositories.Repository;
 import cz.ormframework.tools.TableCreator;
 import cz.ormframework.utils.EntityPair;
 import cz.ormframework.utils.EntityUtils;
+import cz.ormframework.builder.QueryBuilder;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.PreparedStatement;
@@ -38,6 +40,7 @@ public class EntityManager implements IEntityManager {
     private int queryId;
     private boolean enableEvents = true;
     private QueryBase queryBase;
+    private Class<? extends QueryBuilder> queryBuilder;
 
     public boolean areEventsEnabled() {
         return enableEvents;
@@ -46,6 +49,19 @@ public class EntityManager implements IEntityManager {
     @Override
     public TableCreator getTableCreator() {
         return tableCreator;
+    }
+
+    public void setQueryBuilder(Class<? extends QueryBuilder> queryBuilder) {
+        this.queryBuilder = queryBuilder;
+    }
+
+    public <Type> QueryBuilder<Type> getQueryBuilder(Class<Type> clazz) {
+        try {
+            return queryBuilder.getDeclaredConstructor(Class.class, EntityManager.class).newInstance(clazz, this);
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public <Type extends QueryBase> void registerCustomQueries(Type queryBase) {
@@ -75,6 +91,7 @@ public class EntityManager implements IEntityManager {
         }
 
         registerCustomQueries(database.getQueryBase() == null?new DefaultQueryBase() : database.getQueryBase());
+        setQueryBuilder(DefaultQueryBuilder.class);
     }
 
     /**
@@ -245,26 +262,25 @@ public class EntityManager implements IEntityManager {
             return this;
         }
 
-        String result = "DELETE from `" + EntityUtils.getTable(entity.getClass()) + "` where `id` = '" + EntityUtils.getId(entity) + "'";
+        String query = getQueryBase().delete(EntityUtils.getTable(clazz), EntityUtils.getId(entity));
 
         if(enableEvents) {
-            EntityDeleteEvent executeQueryEvent = new EntityDeleteEvent(queryID, Thread.currentThread().getStackTrace(), result, statement, entity);
+            EntityDeleteEvent executeQueryEvent = new EntityDeleteEvent(queryID, Thread.currentThread().getStackTrace(), query, statement, entity);
             EventManager.FireEvent(executeQueryEvent);
             if (executeQueryEvent.isCancelled()) {
                 return this;
             }
         }
 
-
         reopenConnectionOnClose();
 
         try {
-            this.statement = getDatabase().getConnection().prepareStatement(result);
+            this.statement = getDatabase().getConnection().prepareStatement(query);
             this.statement.execute();
         } catch (SQLException e) {
             Debug.exception(e);
         }
-        QueryDoneEvent<Type> queryDoneEvent = new QueryDoneEvent<>(queryID, entity, result);
+        QueryDoneEvent<Type> queryDoneEvent = new QueryDoneEvent<>(queryID, entity, query);
         EventManager.FireEvent(queryDoneEvent);
         return this;
     }

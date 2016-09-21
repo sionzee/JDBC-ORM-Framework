@@ -5,7 +5,7 @@ import cz.ormframework.annotations.Column;
 import cz.ormframework.log.Debug;
 import cz.ormframework.parsers.Parser;
 import cz.ormframework.utils.EntityUtils;
-import cz.ormframework.utils.QueryBuilder;
+import cz.ormframework.builder.QueryBuilder;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -24,7 +24,6 @@ public class Repository<Type> {
 
     private Class<Type> clazz;
     private EntityManager entityManager;
-    private QueryBuilder<Type> queryBuilder;
 
     /**
      * Instantiates a new Repository.
@@ -35,7 +34,6 @@ public class Repository<Type> {
     public Repository(Class<Type> clazz, EntityManager entityManager) {
         this.clazz = clazz;
         this.entityManager = entityManager;
-        this.queryBuilder = new QueryBuilder<Type>(clazz, entityManager);
     }
 
     /**
@@ -46,7 +44,7 @@ public class Repository<Type> {
     public QueryBuilder<Type>.FROM find() {
         List<String> columns = EntityUtils.getColumns(clazz);
         String[] cols = columns.toArray(new String[columns.size()]);
-        return queryBuilder.select(cols).from(clazz);
+        return entityManager.getQueryBuilder(clazz).select(cols).from(clazz);
     }
 
     /**
@@ -55,7 +53,7 @@ public class Repository<Type> {
      * @return the query builder
      */
     public QueryBuilder<Type> newQuery() {
-        return queryBuilder;
+        return entityManager.getQueryBuilder(clazz);
     }
 
     private Type createType(ResultSet rs) {
@@ -140,6 +138,6 @@ public class Repository<Type> {
     }
 
     public QueryBuilder.FROM delete() {
-        return queryBuilder.delete().from(clazz);
+        return entityManager.getQueryBuilder(clazz).delete().from(clazz);
     }
 }
