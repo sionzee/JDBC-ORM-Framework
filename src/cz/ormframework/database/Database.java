@@ -21,9 +21,8 @@ public interface Database {
      * local = DriverManager....
      *
      * @return the boolean
-     * @throws SQLException the sql exception
      */
-    boolean openConnection() throws SQLException;
+    boolean openConnection();
 
     /**
      * Is connection closed?
