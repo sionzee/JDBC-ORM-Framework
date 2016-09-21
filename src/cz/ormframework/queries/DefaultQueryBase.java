@@ -41,4 +41,14 @@ public class DefaultQueryBase extends QueryBase {
     public String insert(String table, Map<String, EntityPair> map) {
         throw new NotImplementedException("QueryBase not found");
     }
+
+    @Override
+    public boolean isQueryDelete(String query) {
+        throw new NotImplementedException("QueryBase not found");
+    }
+
+    @Override
+    public String delete(String table, int id) {
+        throw new NotImplementedException("QueryBase not found");
+    }
 }

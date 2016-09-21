@@ -84,6 +84,11 @@ public class MySQLQueryBase extends QueryBase {
 
     @Override
     public boolean isQueryDelete(String query) {
-        return query.toLowerCase().startsWith("DELETE");
+        return query.toLowerCase().startsWith("delete");
+    }
+
+    @Override
+    public String delete(String table, int id) {
+        return Formatter.format("DELETE FROM `{0}` WHERE `id` = '{1}'", table, id);
     }
 }

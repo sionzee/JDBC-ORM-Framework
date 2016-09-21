@@ -18,4 +18,5 @@ public abstract class QueryBase {
     public abstract String update(String table, Map<String, Object> changes, int id);
     public abstract String insert(String table, Map<String, EntityPair> map);
     public abstract boolean isQueryDelete(String query);
+    public abstract String delete(String table, int id);
 }
