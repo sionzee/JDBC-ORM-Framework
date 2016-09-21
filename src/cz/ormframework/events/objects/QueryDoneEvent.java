@@ -9,13 +9,13 @@ import java.sql.ResultSet;
  * siOnzee.cz
  * JDBC ORM Framework Release
  *
- * @param <Type> the type parameter
+ * @param <EntityType> the type parameter
  */
-public class QueryDoneEvent<Type> extends Event {
+public class QueryDoneEvent<EntityType> extends Event {
     private final static HandlerList<QueryDoneEvent> handlerList = new HandlerList<>();
 
     private int id;
-    private Type type;
+    private EntityType type;
     private String query;
     private ResultSet resultSet;
 
@@ -26,7 +26,7 @@ public class QueryDoneEvent<Type> extends Event {
      * @param type    the type
      * @param query   the query
      */
-    public QueryDoneEvent(int queryID, Type type, String query) {
+    public QueryDoneEvent(int queryID, EntityType type, String query) {
         this.id = queryID;
         this.type = type;
         this.query = query;
@@ -68,7 +68,7 @@ public class QueryDoneEvent<Type> extends Event {
      *
      * @return Updated entity
      */
-    public Type getEntity() {
+    public EntityType getEntity() {
         return type;
     }
 

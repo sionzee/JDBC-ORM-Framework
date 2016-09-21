@@ -10,6 +10,7 @@ import java.sql.Statement;
  * siOnzee.cz
  * JDBC ORM Framework Release
  */
+@Deprecated
 public class ExecuteQueryEvent extends Event implements Cancellable {
     private final static HandlerList<ExecuteQueryEvent> handlerList = new HandlerList<>();
 
