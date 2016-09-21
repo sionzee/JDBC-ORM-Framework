@@ -21,11 +21,6 @@ public class UserManager {
     public UserManager(EntityManager em) {
         this.em = em;
         this.users = new HashMap<String, User>();
-        this.em.registerDeleteOn(User.class, this::onDelete);
-    }
-
-    private void onDelete(User u) {
-        users.remove(u.getUsername());
     }
 
     public void addUser(String username) {
