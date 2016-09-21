@@ -1,6 +1,8 @@
 package cz.ormframework.database;
 
 import cz.ormframework.log.Debug;
+import cz.ormframework.queries.QueryBase;
+import cz.ormframework.queries.SQLiteQueryBase;
 
 import java.io.File;
 import java.sql.Connection;
@@ -15,9 +17,11 @@ public class SQLite implements Database {
 
     private File file;
     private Connection connection;
+    private QueryBase queryBase;
 
     public SQLite(File file) {
         this.file = file;
+        this.queryBase = new SQLiteQueryBase();
     }
 
     @Override
@@ -65,5 +69,10 @@ public class SQLite implements Database {
         } catch (SQLException e) {
             Debug.exception(e);
         }
+    }
+
+    @Override
+    public QueryBase getQueryBase() {
+        return queryBase;
     }
 }
