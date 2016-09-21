@@ -1,6 +1,7 @@
-package cz.ormframework.utils;
+package cz.ormframework.builder;
 
 import cz.ormframework.EntityManager;
+import cz.ormframework.utils.*;
 import cz.ormframework.utils.exceptions.UnknownValueException;
 
 import java.util.*;
@@ -11,7 +12,7 @@ import java.util.*;
  *
  * @param <Entity> the type parameter
  */
-public class QueryBuilder<Entity> {
+public abstract class QueryBuilder<Entity> {
 
     private List<String> columns = new ArrayList<>();
     private List<String> reservedWords = Arrays.asList("XOR", "OR", "LIKE", "=", "NOT", "<=", ">=", "BETWEEN", "AND", "IN");
@@ -141,7 +142,7 @@ public class QueryBuilder<Entity> {
                 }
                 if(first) first = false;
             }
-            _query = Formatter.format(_query, params);
+            _query = cz.ormframework.utils.Formatter.format(_query, params);
         }
 
         /**
