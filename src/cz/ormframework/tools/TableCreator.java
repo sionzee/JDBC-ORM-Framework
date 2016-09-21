@@ -4,6 +4,7 @@ import cz.ormframework.EntityManager;
 import cz.ormframework.annotations.Column;
 import cz.ormframework.events.EventManager;
 import cz.ormframework.events.objects.ExecuteQueryEvent;
+import cz.ormframework.events.objects.QueryCreateTableEvent;
 import cz.ormframework.events.objects.QueryDoneEvent;
 import cz.ormframework.log.Debug;
 import cz.ormframework.utils.EntityUtils;
@@ -15,7 +16,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
 import java.util.jar.JarFile;
-import java.util.regex.Pattern;
 
 /**
  * siOnzee.cz
@@ -84,29 +84,34 @@ public class TableCreator {
         });
 
         query.append("PRIMARY KEY(`id`))");
-
         String result = query.toString();
-
         int queryID = entityManager.getQueryId();
 
-        Statement statement;
         try {
-            statement = entityManager.getDatabase().getConnection().createStatement();
-
-            ExecuteQueryEvent executeQueryEvent = new ExecuteQueryEvent(queryID, Thread.currentThread().getStackTrace()[0], result, statement);
-            EventManager.FireEvent(executeQueryEvent);
-            if (executeQueryEvent.isCancelled()) {
-                return;
-            }
-
-            statement.execute(result);
-
-            QueryDoneEvent queryDoneEvent = new QueryDoneEvent(queryID, null, result);
-            EventManager.FireEvent(queryDoneEvent);
-            statement.close();
-        } catch (SQLException e) {
+            executeQuery(queryID, result);
+        } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void executeQuery(int queryId, String query) throws Exception {
+
+        Statement statement = entityManager.getDatabase().getConnection().createStatement();
+
+        if(entityManager.areEventsEnabled()) {
+            QueryCreateTableEvent event = new QueryCreateTableEvent(queryId, Thread.currentThread().getStackTrace(), query, statement);
+            EventManager.FireEvent(event);
+            if(event.isCancelled())
+                return;
+        }
+
+        statement.execute(query);
+        statement.close();
+        if(entityManager.areEventsEnabled()) {
+            QueryDoneEvent queryDoneEvent = new QueryDoneEvent(queryId, null, query);
+            EventManager.FireEvent(queryDoneEvent);
+        }
+
     }
 
     /**
@@ -154,45 +159,27 @@ public class TableCreator {
     private void executeQuery(String result) {
         int queryID = entityManager.getQueryId();
 
-        Statement statement;
         try {
-            statement = entityManager.getDatabase().getConnection().createStatement();
-
-            ExecuteQueryEvent executeQueryEvent = new ExecuteQueryEvent(queryID, Thread.currentThread().getStackTrace()[0], result, statement);
-            EventManager.FireEvent(executeQueryEvent);
-            if (executeQueryEvent.isCancelled()) {
-                return;
-            }
-
-            statement.execute(result);
-
-            QueryDoneEvent queryDoneEvent = new QueryDoneEvent(queryID, null, result);
-            EventManager.FireEvent(queryDoneEvent);
-            statement.close();
-        } catch (SQLException e) {
+            executeQuery(queryID, result);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private void finishTables(boolean recreate) {
-
         tables.forEach(clazz -> createTable(clazz, recreate));
-
-
         tables.forEach(clazz -> Arrays.stream(clazz.getDeclaredFields()).forEach(field -> {
             if (EntityUtils.getTable(field.getType()) != null && EntityUtils.isIndexed(field)) {
                 String indexID = createIndexName("`" + EntityUtils.getTable(clazz) + "`.`" + EntityUtils.getColumn(field) + "` ON `" + EntityUtils.getTable(field.getType()) + "`.`id`");
                 executeQuery("ALTER TABLE `" + EntityUtils.getTable(clazz) + "` ADD INDEX `" + indexID + "` (`" + EntityUtils.getColumn(field) + "`) ");
             }
         }));
-
         tables.forEach(clazz -> Arrays.stream(clazz.getDeclaredFields()).forEach(field -> {
             if (EntityUtils.getTable(field.getType()) != null && EntityUtils.isIndexed(field)) {
                 String indexID = "fk_" + createIndexName("`" + EntityUtils.getTable(clazz) + "`.`" + EntityUtils.getColumn(field) + "` ON `" + EntityUtils.getTable(field.getType()) + "`.`id`");
                 executeQuery("ALTER TABLE `" + EntityUtils.getTable(clazz) + "` ADD CONSTRAINT `" + indexID + "` FOREIGN KEY (`" + EntityUtils.getColumn(field) + "`) REFERENCES " + EntityUtils.getTable(field.getType()) + "(`id`) ON UPDATE CASCADE ON DELETE CASCADE");
             }
         }));
-
     }
 
     private String createIndexName(String string) {
