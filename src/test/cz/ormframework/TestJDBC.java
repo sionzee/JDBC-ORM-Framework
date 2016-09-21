@@ -1,9 +1,10 @@
-package test.cz.romframework;
+package test.cz.ormframework;
 
 import cz.ormframework.EntityManager;
 import cz.ormframework.database.MySQL;
 import cz.ormframework.events.objects.QueryDoneEvent;
 import cz.ormframework.log.Debug;
+import cz.ormframework.utils.ArrayCollection;
 import cz.ormframework.utils.EntityUtils;
 import cz.ormframework.builder.QueryBuilder;
 import cz.ormframework.utils.StringUtils;
@@ -12,9 +13,9 @@ import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-import test.cz.romframework.codeexamples.manager.User;
-import test.cz.romframework.codeexamples.manager.UserManager;
-import test.cz.romframework.repositories.UserRepository;
+import test.cz.ormframework.codeexamples.manager.User;
+import test.cz.ormframework.codeexamples.manager.UserManager;
+import test.cz.ormframework.repositories.UserRepository;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -335,5 +336,11 @@ public class TestJDBC {
 
         user = userRepository.getUserByName("TestUsername");
         Assert.assertNotNull(user);
+    }
+
+    @Test
+    public void ZYBTestArrayCollection() {
+        ArrayCollection<User> users = ArrayCollection.of(new User(), new User(), new User());
+        users.insert(new User());
     }
 }

@@ -1,7 +1,6 @@
-package test.cz.romframework.codeexamples.manager;
+package test.cz.ormframework.codeexamples.manager;
 
 import cz.ormframework.EntityManager;
-import cz.ormframework.log.Debug;
 
 import java.util.HashMap;
 import java.util.Random;

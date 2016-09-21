@@ -1,4 +1,4 @@
-package test.cz.romframework.codeexamples.manager;
+package test.cz.ormframework.codeexamples.manager;
 
 import cz.ormframework.annotations.Column;
 import cz.ormframework.annotations.Table;

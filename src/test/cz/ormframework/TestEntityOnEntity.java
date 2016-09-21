@@ -1,4 +1,4 @@
-package test.cz.romframework;
+package test.cz.ormframework;
 
 import cz.ormframework.annotations.Column;
 import cz.ormframework.annotations.Table;

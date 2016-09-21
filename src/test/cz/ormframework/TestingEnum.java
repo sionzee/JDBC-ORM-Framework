@@ -1,4 +1,4 @@
-package test.cz.romframework;
+package test.cz.ormframework;
 
 /**
  * siOnzee.cz

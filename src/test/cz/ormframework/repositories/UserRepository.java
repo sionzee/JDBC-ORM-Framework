@@ -1,8 +1,8 @@
-package test.cz.romframework.repositories;
+package test.cz.ormframework.repositories;
 
 import cz.ormframework.EntityManager;
 import cz.ormframework.repositories.Repository;
-import test.cz.romframework.codeexamples.manager.User;
+import test.cz.ormframework.codeexamples.manager.User;
 
 /**
  * Created by siOnzee on 20.09.2016.
