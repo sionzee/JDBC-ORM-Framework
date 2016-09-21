@@ -17,7 +17,7 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="spigot-api-1.10.2-R0.1-SNAPSHOT" level="application" />
-    <orderEntry type="library" name="mysql-connector-java-5.1.39-bin" level="application" />
+    <orderEntry type="library" name="spigot-1.10.2-R0.1-SNAPSHOT" level="application" />
+    <orderEntry type="library" name="spigot-api-1.10.2-R0.1-SNAPSHOT-shaded" level="application" />
   </component>
 </module>
