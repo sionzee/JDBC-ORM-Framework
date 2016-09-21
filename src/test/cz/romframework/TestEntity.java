@@ -94,6 +94,17 @@ public class TestEntity {
     @Column
     private TestingEnum[] testingEnumArray;
 
+    @Column
+    private TestEntity selfEntity;
+
+    public TestEntity getSelfEntity() {
+        return selfEntity;
+    }
+
+    public void setSelfEntity(TestEntity selfEntity) {
+        this.selfEntity = selfEntity;
+    }
+
     /**
      * Sets testing enum.
      *

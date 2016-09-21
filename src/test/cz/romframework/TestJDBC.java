@@ -19,10 +19,12 @@ import test.cz.romframework.repositories.UserRepository;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Random;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Stream;
 
 /**
  * siOnzee.cz
@@ -128,9 +130,21 @@ public class TestJDBC {
             te.setTestingTimestampArray(new Timestamp[]{new Timestamp(new java.util.Date().getTime()), new Timestamp(new java.util.Date().getTime() + 2000L), new Timestamp(new java.util.Date().getTime() + 20000L), new Timestamp(new java.util.Date().getTime() + 200000L)});
             te.setTestingShort((short) 1);
             te.setTestingShortArray(new short[]{(short) 51561, (short) 1617, (short) 5561, (short) 646545644});
+            te.setSelfEntity(te);
             em.persist(te);
         }
         em.flush();
+    }
+
+    @Test
+    public void CO_TryGetters() {
+        TestEntity te = em.getRepository(TestEntity.class).find().where("id = {0}", 1).one();
+        Assert.assertNotNull(te);
+
+        Assert.assertTrue(te.getTestingBoolean());
+        Assert.assertArrayEquals(te.getTestingBooleanArray(), new boolean[] {true, false, true, false});
+        Assert.assertEquals(te.getTestingByte(), 1);
+        //TODO: Finish getters
     }
 
     /**
@@ -266,6 +280,7 @@ public class TestJDBC {
         em.delete(em.getRepository(TestEntity.class).find().where("id = {0}", 1).one());
         em.getRepository(TestEntity.class).delete().where("id = {0}", 2).one();
         em.flush();
+        Assert.assertNull(em.getRepository(TestEntity.class).find().where("id = {0}", 1).one());
     }
 
     /**
@@ -299,6 +314,7 @@ public class TestJDBC {
         }
         em.persist(te).flush();
         Debug.info("TE-Boolean: " + te.getTestingBoolean());
+        Assert.assertTrue(te.getTestingBoolean());
     }
 
     @Test
