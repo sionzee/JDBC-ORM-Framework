@@ -3,7 +3,6 @@ package cz.ormframework.tools;
 import cz.ormframework.EntityManager;
 import cz.ormframework.annotations.Column;
 import cz.ormframework.events.EventManager;
-import cz.ormframework.events.objects.ExecuteQueryEvent;
 import cz.ormframework.events.objects.QueryCreateTableEvent;
 import cz.ormframework.events.objects.QueryDoneEvent;
 import cz.ormframework.log.Debug;
@@ -16,6 +15,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
 import java.util.jar.JarFile;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * siOnzee.cz
@@ -53,42 +54,27 @@ public class TableCreator {
 
         if (recreate)
             try {
-                entityManager.getDatabase().getConnection().createStatement().executeUpdate("DROP TABLE IF EXISTS `" + table + "`");
+                String dropTableQuery = entityManager.getQueryBase().dropTable(table);
+                entityManager.getDatabase().getConnection().createStatement().executeUpdate(dropTableQuery);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
 
-        StringBuilder query = new StringBuilder("CREATE TABLE IF NOT EXISTS `").append(table).append("` (")
-                .append("`id` INT NOT NULL AUTO_INCREMENT, ");
+        String query = entityManager.getQueryBase().createTable(table, Stream.of(clazz.getDeclaredFields())
+                .filter(field -> field.getDeclaredAnnotationsByType(Column.class).length > 0)
+                .filter(field -> EntityUtils.getColumn(field) != null && !EntityUtils.getColumnName(field).equalsIgnoreCase("id"))
+                .map(field ->  {
+                    String columnName = EntityUtils.getColumnName(field);
+                    Column column = EntityUtils.getColumn(field);
+                    return new ColumnEntity(columnName, EntityUtils.getDBType(field), column.length(), column.nullable());
+                }).collect(Collectors.toList()));
 
-        Arrays.stream(clazz.getDeclaredFields()).forEach(field -> {
-            Column column = EntityUtils.getColumn(field);
-            String columnName = EntityUtils.getColumnName(field);
-            if (columnName != null && !Objects.equals(columnName, "id")) {
-                String type = EntityUtils.getDBType(field);
-                int length = column.length();
-                boolean nullable = column.nullable();
-                query.append("`").append(columnName).append("` ").append(type);
-                if (length > 0)
-                    query.append("(").append(length).append(") ");
-                else
-                    query.append(" ");
+        Debug.query(query);
 
-                if (nullable)
-                    query.append("NULL");
-                else
-                    query.append("NOT NULL");
-
-                query.append(", ");
-            }
-        });
-
-        query.append("PRIMARY KEY(`id`))");
-        String result = query.toString();
         int queryID = entityManager.getQueryId();
 
         try {
-            executeQuery(queryID, result);
+            executeQuery(queryID, query);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -146,7 +132,6 @@ public class TableCreator {
         finishTables( recreate);
     }
 
-
     /**
      * Gets tables.
      *
@@ -171,13 +156,13 @@ public class TableCreator {
         tables.forEach(clazz -> Arrays.stream(clazz.getDeclaredFields()).forEach(field -> {
             if (EntityUtils.getTable(field.getType()) != null && EntityUtils.isIndexed(field)) {
                 String indexID = createIndexName("`" + EntityUtils.getTable(clazz) + "`.`" + EntityUtils.getColumn(field) + "` ON `" + EntityUtils.getTable(field.getType()) + "`.`id`");
-                executeQuery("ALTER TABLE `" + EntityUtils.getTable(clazz) + "` ADD INDEX `" + indexID + "` (`" + EntityUtils.getColumn(field) + "`) ");
+                executeQuery(entityManager.getQueryBase().addIndex(EntityUtils.getTable(clazz), indexID, EntityUtils.getColumn(field)));
             }
         }));
         tables.forEach(clazz -> Arrays.stream(clazz.getDeclaredFields()).forEach(field -> {
             if (EntityUtils.getTable(field.getType()) != null && EntityUtils.isIndexed(field)) {
                 String indexID = "fk_" + createIndexName("`" + EntityUtils.getTable(clazz) + "`.`" + EntityUtils.getColumn(field) + "` ON `" + EntityUtils.getTable(field.getType()) + "`.`id`");
-                executeQuery("ALTER TABLE `" + EntityUtils.getTable(clazz) + "` ADD CONSTRAINT `" + indexID + "` FOREIGN KEY (`" + EntityUtils.getColumn(field) + "`) REFERENCES " + EntityUtils.getTable(field.getType()) + "(`id`) ON UPDATE CASCADE ON DELETE CASCADE");
+                executeQuery(entityManager.getQueryBase().addConstraint(EntityUtils.getTable(clazz), indexID, EntityUtils.getColumn(field), EntityUtils.getTable(field.getType())));
             }
         }));
     }

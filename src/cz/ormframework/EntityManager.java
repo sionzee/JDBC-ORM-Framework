@@ -8,10 +8,12 @@ import cz.ormframework.events.objects.*;
 import cz.ormframework.interfaces.IEntityManager;
 import cz.ormframework.log.Debug;
 import cz.ormframework.parsers.Parser;
+import cz.ormframework.queries.DefaultQueryBase;
+import cz.ormframework.queries.QueryBase;
 import cz.ormframework.repositories.Repository;
 import cz.ormframework.tools.TableCreator;
+import cz.ormframework.utils.EntityPair;
 import cz.ormframework.utils.EntityUtils;
-import cz.ormframework.utils.Formatter;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.PreparedStatement;
@@ -20,6 +22,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * siOnzee.cz
@@ -34,6 +37,7 @@ public class EntityManager implements IEntityManager {
     private TableCreator tableCreator;
     private int queryId;
     private boolean enableEvents = true;
+    private QueryBase queryBase;
 
     public boolean areEventsEnabled() {
         return enableEvents;
@@ -42,6 +46,10 @@ public class EntityManager implements IEntityManager {
     @Override
     public TableCreator getTableCreator() {
         return tableCreator;
+    }
+
+    public <Type extends QueryBase> void registerCustomQueries(Type queryBase) {
+        this.queryBase = queryBase;
     }
 
     /**
@@ -65,6 +73,8 @@ public class EntityManager implements IEntityManager {
         } catch (SQLException e) {
             Debug.exception(e);
         }
+
+        registerCustomQueries(database.getQueryBase() == null?new DefaultQueryBase() : database.getQueryBase());
     }
 
     /**
@@ -96,8 +106,7 @@ public class EntityManager implements IEntityManager {
     }
 
     private <Type> IEntityManager insertEntity(Type entity, String table) {
-        StringBuilder columns = new StringBuilder();
-        StringBuilder values = new StringBuilder();
+        Map<String, EntityPair> map = new HashMap<>();
 
         Arrays.stream(entity.getClass().getDeclaredFields()).forEach(field -> {
             field.setAccessible(true);
@@ -106,16 +115,7 @@ public class EntityManager implements IEntityManager {
             if (column != null && !column.equalsIgnoreCase("id")) {
                 try {
                     Table ent = field.getType().getDeclaredAnnotation(Table.class);
-                    if (ent == null) {
-                        columns.append("`").append(column).append("`").append(", ");
-                        values.append("'").append(Parser.EntityToDBType(field, entity)).append("'").append(", ");
-                    } else {
-                        int idd = EntityUtils.getId(field.get(entity));
-                        if (idd > 0) {
-                            columns.append("`").append(column).append("`").append(", ");
-                            values.append("'").append(idd).append("'").append(", ");
-                        }
-                    }
+                    map.put(column, new EntityPair(ent != null, ent == null? Parser.EntityToDBType(field, entity): EntityUtils.getId(field.get(entity))));
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
@@ -123,9 +123,10 @@ public class EntityManager implements IEntityManager {
 
         });
 
-        String result = Formatter.format("INSERT INTO `{0}` ({1}) VALUES ({2})", table, columns.substring(0, columns.length() - 2), values.substring(0, values.length() - 2));
+        String query = getQueryBase().insert(table, map);
+
         if(enableEvents) {
-            EntityInsertEvent executeQueryEvent = new EntityInsertEvent(queryID, Thread.currentThread().getStackTrace(), result, statement, entity);
+            EntityInsertEvent executeQueryEvent = new EntityInsertEvent(queryID, Thread.currentThread().getStackTrace(), query, statement, entity);
             EventManager.FireEvent(executeQueryEvent);
             if (executeQueryEvent.isCancelled()) {
                 return this;
@@ -134,12 +135,12 @@ public class EntityManager implements IEntityManager {
         try {
 
             try {
-                this.statement = getDatabase().getConnection().prepareStatement(result, Statement.RETURN_GENERATED_KEYS);
+                this.statement = getDatabase().getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             } catch (SQLException e) {
                 Debug.exception(e);
             }
 
-            statement.execute(result, Statement.RETURN_GENERATED_KEYS);
+            statement.execute(query, Statement.RETURN_GENERATED_KEYS);
             ResultSet rs = statement.getGeneratedKeys();
             rs.next();
             EntityUtils.setId(entity, rs.getInt(1));
@@ -147,14 +148,14 @@ public class EntityManager implements IEntityManager {
             Debug.exception(e);
         }
         if(enableEvents) {
-            QueryDoneEvent<Type> queryDoneEvent = new QueryDoneEvent<>(queryID, entity, result);
+            QueryDoneEvent<Type> queryDoneEvent = new QueryDoneEvent<>(queryID, entity, query);
             EventManager.FireEvent(queryDoneEvent);
         }
         return this;
     }
 
     private <Type> IEntityManager updateEntity(int id, Type entity, String table) {
-        StringBuilder changes = new StringBuilder();
+        Map<String, Object> changes = new HashMap<>();
         Object databaseEntity = getRepository(entity.getClass()).find().where("id = {0}", id).one();
         Arrays.stream(entity.getClass().getDeclaredFields()).forEach(field -> {
             field.setAccessible(true);
@@ -166,11 +167,10 @@ public class EntityManager implements IEntityManager {
                         field.setAccessible(true);
                         Object value = Parser.ToDBType(field, field.get(entity));
                         field.setAccessible(false);
-
                         if (value != null) {
-                            changes.append("`").append(columnName).append("` = '").append(value).append("'").append(", ");
+                            changes.put(columnName, value);
                         } else
-                            changes.append("`").append(columnName).append("` = NULL").append(", ");
+                            changes.put(columnName, null);
                     }
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
@@ -178,9 +178,10 @@ public class EntityManager implements IEntityManager {
             }
         });
 
-        if (changes.length() < 1)
+        if (changes.size() < 1)
             return this;
-        String query = Formatter.format("UPDATE `{0}` SET {1} where {2}", table, changes.substring(0, changes.length() - 2), "`id` = '" + id + "'");
+        String query = getQueryBase().update(table, changes, id);
+        changes.clear();
         if(enableEvents) {
             EntityUpdateEvent executeQueryEvent = new EntityUpdateEvent(queryID, Thread.currentThread().getStackTrace(), query, statement, databaseEntity, entity);
             EventManager.FireEvent(executeQueryEvent);
@@ -232,7 +233,7 @@ public class EntityManager implements IEntityManager {
      * @param entity the entity
      * @return the entity manager
      */
-    public <Type> EntityManager delete(@NotNull Type entity) {
+    public <Type> IEntityManager delete(@NotNull Type entity) {
         Class<?> clazz = entity.getClass();
         if (!EntityUtils.isEntity(clazz)) {
             Debug.error(clazz.getCanonicalName() + " isn't entity! Can't delete!");
@@ -373,5 +374,9 @@ public class EntityManager implements IEntityManager {
      */
     public int getQueryId() {
         return queryId++;
+    }
+
+    public QueryBase getQueryBase() {
+        return queryBase;
     }
 }

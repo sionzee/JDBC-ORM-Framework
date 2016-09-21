@@ -1,6 +1,8 @@
 package cz.ormframework.database;
 
 import cz.ormframework.log.Debug;
+import cz.ormframework.queries.MySQLQueryBase;
+import cz.ormframework.queries.QueryBase;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,6 +17,7 @@ public class MySQL implements Database {
     private String host = "localhost", db = "minecraft", user, pass;
     private int port = 3306;
     private Connection connection;
+    private QueryBase queryBase;
 
     /**
      * Instantiates a new My sql.
@@ -29,6 +32,7 @@ public class MySQL implements Database {
         this.db = db;
         this.user = user;
         this.pass = pass;
+        this.queryBase = new MySQLQueryBase();
     }
 
     /**
@@ -42,6 +46,7 @@ public class MySQL implements Database {
         this.db = db;
         this.user = user;
         this.pass = pass;
+        this.queryBase = new MySQLQueryBase();
     }
 
     /**
@@ -53,6 +58,7 @@ public class MySQL implements Database {
     public MySQL(String user, String pass) {
         this.user = user;
         this.pass = pass;
+        this.queryBase = new MySQLQueryBase();
     }
 
     /**
@@ -70,6 +76,7 @@ public class MySQL implements Database {
         this.user = user;
         this.pass = pass;
         this.port = port;
+        this.queryBase = new MySQLQueryBase();
     }
 
     @Override
@@ -117,5 +124,10 @@ public class MySQL implements Database {
         } catch (SQLException e) {
             Debug.exception(e);
         }
+    }
+
+    @Override
+    public QueryBase getQueryBase() {
+        return queryBase;
     }
 }

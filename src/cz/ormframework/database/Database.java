@@ -1,5 +1,8 @@
 package cz.ormframework.database;
 
+import cz.ormframework.queries.QueryBase;
+
+import javax.annotation.Nullable;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -43,4 +46,5 @@ public interface Database {
      */
     void close();
 
+    QueryBase getQueryBase();
 }
