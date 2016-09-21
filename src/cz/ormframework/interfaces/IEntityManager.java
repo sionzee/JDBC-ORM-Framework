@@ -4,8 +4,6 @@ import com.sun.istack.internal.NotNull;
 import cz.ormframework.database.Database;
 import cz.ormframework.repositories.Repository;
 import cz.ormframework.tools.TableCreator;
-import test.cz.romframework.codeexamples.manager.User;
-import test.cz.romframework.repositories.UserRepository;
 
 /**
  * siOnzee.cz
