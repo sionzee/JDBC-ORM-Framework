@@ -8,6 +8,7 @@ import cz.ormframework.utils.EntityUtils;
 import cz.ormframework.utils.QueryBuilder;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -95,6 +96,14 @@ public class Repository<Type> {
                     }
                 }
             });
+
+            try {
+                Field entityManagerField = type.getClass().getDeclaredField("entityManager");
+                entityManagerField.setAccessible(true);
+                entityManagerField.set(type, entityManager);
+                entityManagerField.setAccessible(false);
+            } catch (NoSuchFieldException ignored) {}
+
             type = finalType;
 
         } catch (InstantiationException | IllegalAccessException e) {
@@ -116,7 +125,7 @@ public class Repository<Type> {
         String query = result.toString();
         try {
             Statement st = entityManager.getDatabase().getConnection().createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, ResultSet.CLOSE_CURSORS_AT_COMMIT);
-            if(query.startsWith("DELETE")) {
+            if(entityManager.getQueryBase().isQueryDelete(query)) {
                 st.execute(query);
                 return Collections.emptySet();
             }
