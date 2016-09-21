@@ -9,7 +9,7 @@ import cz.ormframework.repositories.Repository;
  * Created by siOnzee on 21.09.2016.
  */
 public class RegisterRepositoryEvent<Entity, EntityRepository extends Repository<Entity>> extends Event implements Cancellable {
-    private final static HandlerList<QueryDoneEvent> handlerList = new HandlerList<>();
+    private final static HandlerList<RegisterRepositoryEvent> handlerList = new HandlerList<>();
     private boolean canceled = false;
     private Class<EntityRepository> repository;
     private Class<Entity> entity;
@@ -32,7 +32,7 @@ public class RegisterRepositoryEvent<Entity, EntityRepository extends Repository
      *
      * @return HandlerList handler list
      */
-    public static HandlerList<QueryDoneEvent> getHandlerList() {
+    public static HandlerList<RegisterRepositoryEvent> getHandlerList() {
         return handlerList;
     }
 

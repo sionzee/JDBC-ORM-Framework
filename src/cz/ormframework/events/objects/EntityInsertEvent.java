@@ -10,7 +10,7 @@ import java.sql.PreparedStatement;
  * Created by siOnzee on 21.09.2016.
  */
 public class EntityInsertEvent<EntityType> extends Event implements Cancellable {
-    private final static HandlerList<QueryDoneEvent> handlerList = new HandlerList<>();
+    private final static HandlerList<EntityInsertEvent> handlerList = new HandlerList<>();
     private boolean canceled = false;
 
     private int queryId;
@@ -53,7 +53,7 @@ public class EntityInsertEvent<EntityType> extends Event implements Cancellable 
      *
      * @return HandlerList handler list
      */
-    public static HandlerList<QueryDoneEvent> getHandlerList() {
+    public static HandlerList<EntityInsertEvent> getHandlerList() {
         return handlerList;
     }
 
