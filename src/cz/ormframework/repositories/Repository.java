@@ -69,8 +69,12 @@ public class Repository<Type> {
                     String columnName = EntityUtils.getColumnName(field);
                     boolean isEntity = EntityUtils.isEntity((field.getType().isArray() ? field.getType().getComponentType() : field.getType()));
                     try {
-                        if(!isEntity)
-                            Parser.FromDBType(rs.getObject(columnName), field, finalType);
+                        if(!isEntity) {
+                            Object value = rs.getObject(columnName);
+                            if(columnAnnotation.nullable() && value == null)
+                                field.set(finalType, null);
+                            else Parser.FromDBType(value, field, finalType);
+                        }
                         else {
                             if(field.getType().isArray()) {
                                 String r = rs.getString(columnName);
@@ -137,7 +141,7 @@ public class Repository<Type> {
         return typeList;
     }
 
-    public QueryBuilder.FROM delete() {
+    public QueryBuilder<Type>.FROM delete() {
         return entityManager.getQueryBuilder(clazz).delete().from(clazz);
     }
 }
