@@ -20,7 +20,12 @@ public class ArrayCollection<ArrayType> {
         return new ArrayCollection<A>((Class<A>) arrayTypes.getClass().getComponentType(), arrayTypes);
     }
 
-    public ArrayCollection(int length) {
+    public static <A> ArrayCollection<A> of(ArrayCollection<A> array) {
+        return array.clone();
+    }
+
+    public ArrayCollection(Class<ArrayType> clazz, int length) {
+        this.clazz = clazz;
         array = newInstance(length);
         this.length = length;
     }
@@ -78,7 +83,7 @@ public class ArrayCollection<ArrayType> {
         return array[index];
     }
 
-    public ArrayType[] values() {
+    public ArrayType[] toArray() {
         return array;
     }
 
