@@ -93,7 +93,7 @@ entityManager.persist(rank).persist(user).flush();
 
 #### <img align="left" src="http://findicons.com/files/icons/949/token/16/search.png" />&nbsp;Select from a database
 ```java
-User user = entityManager.getRepository(User.class).find().where("id = {0}", 1).ONE();
+User user = entityManager.getRepository(User.class).find().where("id = {0}", 1).one();
 if(user != null) {
     print("User " + user.getName() + " have a rank " + user.getRank().getName());
     //User George have a rank Administrator
@@ -106,7 +106,7 @@ if(user != null) {
 
 #### <img align="left" src="https://cdn2.iconfinder.com/data/icons/aspneticons_v1.0_Nov2006/edit_16x16.gif" />&nbsp;Modify value
 ```java
-User user = entityManager.getRepository(User.class).find().where("id = {0}", 1).ONE();
+User user = entityManager.getRepository(User.class).find().where("id = {0}", 1).one();
 user.setName("NewName");
 entityManager.persist(user).flush();
 ```
@@ -114,7 +114,7 @@ entityManager.persist(user).flush();
 
 #### <img align="left" src="https://cdn2.iconfinder.com/data/icons/aspneticons_v1.0_Nov2006/delete_16x16.gif" />&nbsp;Remove an entity
 ```java
-User user = entityManager.getRepository(User.class).find().where("id = {0}", 1).ONE();
+User user = entityManager.getRepository(User.class).find().where("id = {0}", 1).one();
 if(user != null) // Exists
 	entityManager.delete(user);
 	
