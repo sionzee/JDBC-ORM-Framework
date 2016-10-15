@@ -1,6 +1,7 @@
 package cz.ormframework.builder;
 
 import cz.ormframework.EntityManager;
+import cz.ormframework.log.Debug;
 import cz.ormframework.utils.*;
 import cz.ormframework.utils.exceptions.UnknownValueException;
 
@@ -127,6 +128,12 @@ public abstract class QueryBuilder<Entity> {
          */
         public WHERE(String query, String condition, Object[] params) {
             _query = query + " where ";
+
+            if(params.length > 0)
+                for(int i = 0; i < params.length; i++) {
+                    if(!condition.contains("{" + i +"}"))
+                        Debug.error("Wrong where condition! \"" + condition + "\" missing {" + i + "} (" + params[i] + ")");
+                }
 
             boolean first = true;
             for(String word : condition.split(" ")) {
