@@ -69,8 +69,6 @@ public class TableCreator {
                     return new ColumnEntity(columnName, EntityUtils.getDBType(field), column.length(), column.nullable());
                 }).collect(Collectors.toList()));
 
-        Debug.query(query);
-
         int queryID = entityManager.getQueryId();
 
         try {

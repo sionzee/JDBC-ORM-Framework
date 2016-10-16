@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="22f0e837-ce7b-4768-9ef8-802bb8644b8a" name="Default" comment="Added multiple persistence entity">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/ormframework/queries/MySQLQueryBase.java" afterPath="$PROJECT_DIR$/src/cz/ormframework/queries/MySQLQueryBase.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/cz/ormframework/TestEntity.java" afterPath="$PROJECT_DIR$/src/test/cz/ormframework/TestEntity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/ormframework/tools/TableCreator.java" afterPath="$PROJECT_DIR$/src/cz/ormframework/tools/TableCreator.java" />
     </list>
     <list id="785204c0-de42-4d74-85cc-4c4079b3554e" name="Rejected commit: Default" comment="Added multiple persistence entity" />
     <ignored path="JDBC ORM Framework.iws" />
@@ -87,10 +85,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MySQLQueryBase.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="MySQLQueryBase.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/cz/ormframework/queries/MySQLQueryBase.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="84">
+            <state relative-caret-position="-171">
               <caret line="61" column="20" selection-start-line="61" selection-start-column="20" selection-end-line="61" selection-end-column="20" />
               <folding>
                 <element signature="e#3360#3361#0" expanded="true" />
@@ -130,11 +128,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TableCreator.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="TableCreator.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/cz/ormframework/tools/TableCreator.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2414">
-              <caret line="160" column="12" selection-start-line="160" selection-start-column="12" selection-end-line="160" selection-end-column="12" />
+            <state relative-caret-position="174">
+              <caret line="70" column="0" selection-start-line="70" selection-start-column="0" selection-end-line="70" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -176,7 +174,6 @@
         <option value="$PROJECT_DIR$/src/test/cz/romframework/codeexamples/manager/UserManager.java" />
         <option value="$PROJECT_DIR$/src/test/cz/romframework/repositories/UserRepository.java" />
         <option value="$PROJECT_DIR$/src/test/cz/romframework/TestEntity.java" />
-        <option value="$PROJECT_DIR$/src/cz/ormframework/tools/TableCreator.java" />
         <option value="$PROJECT_DIR$/src/test/cz/romframework/generic/example/AbstractClass.java" />
         <option value="$PROJECT_DIR$/src/test/cz/romframework/generic/example/CustomClass.java" />
         <option value="$PROJECT_DIR$/src/test/cz/romframework/generic/example/ClassParser.java" />
@@ -203,6 +200,7 @@
         <option value="$PROJECT_DIR$/src/cz/ormframework/parsers/Parser.java" />
         <option value="$PROJECT_DIR$/src/test/cz/ormframework/TestEntity.java" />
         <option value="$PROJECT_DIR$/src/cz/ormframework/queries/MySQLQueryBase.java" />
+        <option value="$PROJECT_DIR$/src/cz/ormframework/tools/TableCreator.java" />
       </list>
     </option>
   </component>
@@ -1040,7 +1038,7 @@
       <workItem from="1474912947399" duration="18000" />
       <workItem from="1475242602704" duration="389000" />
       <workItem from="1476524669531" duration="10568000" />
-      <workItem from="1476611672897" duration="278000" />
+      <workItem from="1476611672897" duration="453000" />
     </task>
     <task id="LOCAL-00001" summary="Added multiple persistence entity">
       <created>1469693717238</created>
@@ -1099,7 +1097,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="40169000" />
+    <option name="totallyTimeSpent" value="40344000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -1332,6 +1330,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="612">
           <caret line="39" column="7" selection-start-line="39" selection-start-column="7" selection-end-line="39" selection-end-column="7" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1406,6 +1405,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="408">
           <caret line="49" column="1" selection-start-line="49" selection-start-column="1" selection-end-line="49" selection-end-column="1" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1422,6 +1422,7 @@
         <state split_layout="FIRST">
           <first_editor relative-caret-position="374">
             <caret line="22" column="0" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+            <folding />
           </first_editor>
           <second_editor />
         </state>
@@ -1485,14 +1486,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="782">
           <caret line="52" column="5" selection-start-line="52" selection-start-column="5" selection-end-line="52" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/ormframework/tools/TableCreator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2414">
-          <caret line="160" column="12" selection-start-line="160" selection-start-column="12" selection-end-line="160" selection-end-column="12" />
           <folding />
         </state>
       </provider>
@@ -1565,12 +1558,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/cz/ormframework/queries/MySQLQueryBase.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="84">
+        <state relative-caret-position="-171">
           <caret line="61" column="20" selection-start-line="61" selection-start-column="20" selection-end-line="61" selection-end-column="20" />
           <folding>
             <element signature="e#3360#3361#0" expanded="true" />
             <element signature="e#3423#3424#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/ormframework/tools/TableCreator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="174">
+          <caret line="70" column="0" selection-start-line="70" selection-start-column="0" selection-end-line="70" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
