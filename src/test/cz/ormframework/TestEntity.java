@@ -95,6 +95,9 @@ public class TestEntity {
     private TestingEnum[] testingEnumArray;
 
     @Column
+    private Date nullDate = null;
+
+    @Column
     private TestEntity selfEntity;
 
     public TestEntity getSelfEntity() {
@@ -589,5 +592,13 @@ public class TestEntity {
      */
     public TestingEnum[] getTestingEnumArray() {
         return testingEnumArray;
+    }
+
+    /**
+     * Get null date.
+     * @return the null
+     */
+    public Date getNullDate() {
+        return nullDate;
     }
 }
