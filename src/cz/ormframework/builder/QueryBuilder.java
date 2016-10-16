@@ -1,6 +1,8 @@
 package cz.ormframework.builder;
 
 import cz.ormframework.EntityManager;
+import cz.ormframework.events.EventManager;
+import cz.ormframework.events.objects.EntitySelectEvent;
 import cz.ormframework.log.Debug;
 import cz.ormframework.utils.*;
 import cz.ormframework.utils.exceptions.UnknownValueException;
@@ -87,25 +89,47 @@ public abstract class QueryBuilder<Entity> {
          */
         public Entity one() {
             Iterator<Entity> it = entityManager.getRepository(clazz).query(this).iterator();
-            if(!it.hasNext())
-                return null;
-            return it.next(); }
+
+            Entity entity = it.hasNext() ? it.next() : null;
+
+            if(entityManager.areEventsEnabled()) {
+                EntitySelectEvent<Entity> event = new EntitySelectEvent<Entity>(entityManager.getQueryId(), Thread.currentThread().getStackTrace(), toString(), new ArrayList<Entity>(){{add(entity);}});
+                EventManager.FireEvent(event);
+                if(event.isCancelled())
+                    return null;
+            }
+
+            return entity;
+        }
 
         /**
          * Limit collection.
          *
-         * @param from the from
-         * @param to   the to
          * @return the collection
          */
-        public Collection<Entity> limit(int from, int to) { return entityManager.getRepository(clazz).query(this); }
+        public Collection<Entity> limit(int offset, int length) {
+            _query = _query + " LIMIT " + (offset == -1 ? "" : + offset + ", ") + length;
+            return entityManager.getRepository(clazz).query(this);
+        }
 
         /**
          * All collection.
          *
          * @return the collection
          */
-        public Collection<Entity> all() {return entityManager.getRepository(clazz).query(this);}
+        public Collection<Entity> all() {
+
+            Collection<Entity> entities = entityManager.getRepository(clazz).query(this);
+
+            if(entityManager.areEventsEnabled()) {
+                EntitySelectEvent<Entity> event = new EntitySelectEvent<Entity>(entityManager.getQueryId(), Thread.currentThread().getStackTrace(), toString(), entities);
+                EventManager.FireEvent(event);
+                if(event.isCancelled())
+                    return null;
+            }
+
+            return entities;
+        }
 
         @Override
         public String toString() {
@@ -227,7 +251,7 @@ public abstract class QueryBuilder<Entity> {
          * @param params the params
          */
         public SELECT(String[] params) {
-            if(params.length <= 0)
+            if(params == null || params.length <= 0)
                 try {
                     throw new UnknownValueException("[QueryBuilder][select] Can't select from (0 params or null).");
                 } catch (UnknownValueException e) {
