@@ -1,1 +1,4 @@
 /out/
+/target/
+/testSqlite.db
+/.idea/
