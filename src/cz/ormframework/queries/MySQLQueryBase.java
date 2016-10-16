@@ -75,7 +75,9 @@ public class MySQLQueryBase extends QueryBase {
         map.forEach((s, entityPair) -> {
             if(!entityPair.isEntity() || (entityPair.isEntity() && Integer.valueOf(entityPair.getValue().toString()) > -1)) {
                 columns.append("`").append(s).append("`").append(", ");
-                values.append("'").append(entityPair.getValue()).append("'").append(", ");
+                if(entityPair.getValue() != null)
+                    values.append("'").append(entityPair.getValue()).append("'").append(", ");
+                else values.append("null").append(", ");
             }
         });
 
