@@ -134,6 +134,7 @@ public class TestJDBC {
         Assert.assertTrue(te.getTestingBoolean());
         Assert.assertArrayEquals(te.getTestingBooleanArray(), new boolean[] {true, false, true, false});
         Assert.assertEquals(te.getTestingByte(), 1);
+        Assert.assertNull(te.getNullDate());
         //TODO: Finish getters
     }
 
@@ -164,6 +165,16 @@ public class TestJDBC {
     public void FSelectFilter() {
         TestEntity te = em.getRepository(TestEntity.class).find().where("id = {0}", 5).order("id", QueryBuilder.ORDERING.ASC).one();
         Assert.assertNotNull(te);
+    }
+
+    /**
+     * FA select filter.
+     */
+    @Test(timeout = 4000L)
+    public void FUSelectLimited() {
+        Collection<TestEntity> te = em.getRepository(TestEntity.class).find().limit(2, 4);
+        Assert.assertNotNull(te);
+        Assert.assertEquals(te.iterator().next().getId(), 3);
     }
 
     /**
