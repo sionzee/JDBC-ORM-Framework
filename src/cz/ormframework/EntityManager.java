@@ -265,7 +265,7 @@ public class EntityManager implements IEntityManager {
         String query = getQueryBase().delete(EntityUtils.getTable(clazz), EntityUtils.getId(entity));
 
         if(enableEvents) {
-            EntityDeleteEvent executeQueryEvent = new EntityDeleteEvent(queryID, Thread.currentThread().getStackTrace(), query, statement, entity);
+            EntityDeleteEvent<Type> executeQueryEvent = new EntityDeleteEvent<Type>(queryID, Thread.currentThread().getStackTrace(), query, statement, entity);
             EventManager.FireEvent(executeQueryEvent);
             if (executeQueryEvent.isCancelled()) {
                 return this;
