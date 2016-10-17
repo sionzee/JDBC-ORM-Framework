@@ -14,12 +14,12 @@ import java.util.stream.Stream;
  */
 public class UserManager {
 
-    HashMap<String, User> users;
-    EntityManager em;
+    private HashMap<String, User> users;
+    private EntityManager em;
 
     public UserManager(EntityManager em) {
         this.em = em;
-        this.users = new HashMap<String, User>();
+        this.users = new HashMap<>();
     }
 
     public void addUser(String username) {

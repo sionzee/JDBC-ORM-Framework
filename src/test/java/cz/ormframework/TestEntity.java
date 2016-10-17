@@ -11,7 +11,7 @@ import java.sql.Timestamp;
  * JDBC ORM Framework Release
  */
 @Table("TestingEntity")
-public class TestEntity {
+class TestEntity {
 
     @Column
     private int id;
@@ -100,11 +100,11 @@ public class TestEntity {
     @Column
     private TestEntity selfEntity;
 
-    public TestEntity getSelfEntity() {
+    TestEntity getSelfEntity() {
         return selfEntity;
     }
 
-    public void setSelfEntity(TestEntity selfEntity) {
+    void setSelfEntity(TestEntity selfEntity) {
         this.selfEntity = selfEntity;
     }
 
@@ -113,7 +113,7 @@ public class TestEntity {
      *
      * @param testingEnum the testing enum
      */
-    public void setTestingEnum(TestingEnum testingEnum) {
+    void setTestingEnum(TestingEnum testingEnum) {
         this.testingEnum = testingEnum;
     }
 
@@ -122,7 +122,7 @@ public class TestEntity {
      *
      * @param testingEnumArray the testing enum array
      */
-    public void setTestingEnumArray(TestingEnum[] testingEnumArray) {
+    void setTestingEnumArray(TestingEnum[] testingEnumArray) {
         this.testingEnumArray = testingEnumArray;
     }
 
@@ -131,7 +131,7 @@ public class TestEntity {
      *
      * @param testingEntity the testing entity
      */
-    public void setTestingEntity(TestEntityOnEntity testingEntity) {
+    void setTestingEntity(TestEntityOnEntity testingEntity) {
         this.testingEntity = testingEntity;
     }
 
@@ -140,7 +140,7 @@ public class TestEntity {
      *
      * @param testingEntityArray the testing entity array
      */
-    public void setTestingEntityArray(TestEntityOnEntity[] testingEntityArray) {
+    void setTestingEntityArray(TestEntityOnEntity[] testingEntityArray) {
         this.testingEntityArray = testingEntityArray;
     }
 
@@ -149,7 +149,7 @@ public class TestEntity {
      *
      * @param testingText the testing text
      */
-    public void setTestingText(String testingText) {
+    void setTestingText(String testingText) {
         this.testingText = testingText;
     }
 
@@ -158,7 +158,7 @@ public class TestEntity {
      *
      * @param testingInt the testing int
      */
-    public void setTestingInt(int testingInt) {
+    void setTestingInt(int testingInt) {
         this.testingInt = testingInt;
     }
 
@@ -167,7 +167,7 @@ public class TestEntity {
      *
      * @param testingLong the testing long
      */
-    public void setTestingLong(long testingLong) {
+    void setTestingLong(long testingLong) {
         this.testingLong = testingLong;
     }
 
@@ -176,7 +176,7 @@ public class TestEntity {
      *
      * @param testingChar the testing char
      */
-    public void setTestingChar(char testingChar) {
+    void setTestingChar(char testingChar) {
         this.testingChar = testingChar;
     }
 
@@ -185,7 +185,7 @@ public class TestEntity {
      *
      * @param testingShort the testing short
      */
-    public void setTestingShort(short testingShort) {
+    void setTestingShort(short testingShort) {
         this.testingShort = testingShort;
     }
 
@@ -194,7 +194,7 @@ public class TestEntity {
      *
      * @param testingBoolean the testing boolean
      */
-    public void setTestingBoolean(boolean testingBoolean) {
+    void setTestingBoolean(boolean testingBoolean) {
         this.testingBoolean = testingBoolean;
     }
 
@@ -203,7 +203,7 @@ public class TestEntity {
      *
      * @param testingByte the testing byte
      */
-    public void setTestingByte(byte testingByte) {
+    void setTestingByte(byte testingByte) {
         this.testingByte = testingByte;
     }
 
@@ -212,7 +212,7 @@ public class TestEntity {
      *
      * @param testingFloat the testing float
      */
-    public void setTestingFloat(float testingFloat) {
+    void setTestingFloat(float testingFloat) {
         this.testingFloat = testingFloat;
     }
 
@@ -221,7 +221,7 @@ public class TestEntity {
      *
      * @param testingDouble the testing double
      */
-    public void setTestingDouble(double testingDouble) {
+    void setTestingDouble(double testingDouble) {
         this.testingDouble = testingDouble;
     }
 
@@ -230,7 +230,7 @@ public class TestEntity {
      *
      * @param testingTimestamp the testing timestamp
      */
-    public void setTestingTimestamp(Timestamp testingTimestamp) {
+    void setTestingTimestamp(Timestamp testingTimestamp) {
         this.testingTimestamp = testingTimestamp;
     }
 
@@ -239,7 +239,7 @@ public class TestEntity {
      *
      * @param testingDate the testing date
      */
-    public void setTestingDate(Date testingDate) {
+    void setTestingDate(Date testingDate) {
         this.testingDate = testingDate;
     }
 
@@ -248,7 +248,7 @@ public class TestEntity {
      *
      * @param testingTextArray the testing text array
      */
-    public void setTestingTextArray(String[] testingTextArray) {
+    void setTestingTextArray(String[] testingTextArray) {
         this.testingTextArray = testingTextArray;
     }
 
@@ -257,7 +257,7 @@ public class TestEntity {
      *
      * @param testingIntArray the testing int array
      */
-    public void setTestingIntArray(int[] testingIntArray) {
+    void setTestingIntArray(int[] testingIntArray) {
         this.testingIntArray = testingIntArray;
     }
 
@@ -266,7 +266,7 @@ public class TestEntity {
      *
      * @param testingLongArray the testing long array
      */
-    public void setTestingLongArray(long[] testingLongArray) {
+    void setTestingLongArray(long[] testingLongArray) {
         this.testingLongArray = testingLongArray;
     }
 
@@ -275,7 +275,7 @@ public class TestEntity {
      *
      * @param testingCharArray the testing char array
      */
-    public void setTestingCharArray(char[] testingCharArray) {
+    void setTestingCharArray(char[] testingCharArray) {
         this.testingCharArray = testingCharArray;
     }
 
@@ -284,7 +284,7 @@ public class TestEntity {
      *
      * @param testingShortArray the testing short array
      */
-    public void setTestingShortArray(short[] testingShortArray) {
+    void setTestingShortArray(short[] testingShortArray) {
         this.testingShortArray = testingShortArray;
     }
 
@@ -293,7 +293,7 @@ public class TestEntity {
      *
      * @param testingBooleanArray the testing boolean array
      */
-    public void setTestingBooleanArray(boolean[] testingBooleanArray) {
+    void setTestingBooleanArray(boolean[] testingBooleanArray) {
         this.testingBooleanArray = testingBooleanArray;
     }
 
@@ -302,7 +302,7 @@ public class TestEntity {
      *
      * @param testingByteArray the testing byte array
      */
-    public void setTestingByteArray(byte[] testingByteArray) {
+    void setTestingByteArray(byte[] testingByteArray) {
         this.testingByteArray = testingByteArray;
     }
 
@@ -311,7 +311,7 @@ public class TestEntity {
      *
      * @param testingFloatArray the testing float array
      */
-    public void setTestingFloatArray(float[] testingFloatArray) {
+    void setTestingFloatArray(float[] testingFloatArray) {
         this.testingFloatArray = testingFloatArray;
     }
 
@@ -320,7 +320,7 @@ public class TestEntity {
      *
      * @param testingDoubleArray the testing double array
      */
-    public void setTestingDoubleArray(double[] testingDoubleArray) {
+    void setTestingDoubleArray(double[] testingDoubleArray) {
         this.testingDoubleArray = testingDoubleArray;
     }
 
@@ -329,7 +329,7 @@ public class TestEntity {
      *
      * @param testingTimestampArray the testing timestamp array
      */
-    public void setTestingTimestampArray(Timestamp[] testingTimestampArray) {
+    void setTestingTimestampArray(Timestamp[] testingTimestampArray) {
         this.testingTimestampArray = testingTimestampArray;
     }
 
@@ -338,7 +338,7 @@ public class TestEntity {
      *
      * @param testingDateArray the testing date array
      */
-    public void setTestingDateArray(Date[] testingDateArray) {
+    void setTestingDateArray(Date[] testingDateArray) {
         this.testingDateArray = testingDateArray;
     }
 
@@ -347,7 +347,7 @@ public class TestEntity {
      *
      * @return the testing boolean
      */
-    public boolean getTestingBoolean() {
+    boolean getTestingBoolean() {
         return testingBoolean;
     }
 
@@ -356,7 +356,7 @@ public class TestEntity {
      *
      * @return the id
      */
-    public int getId() {
+    int getId() {
         return id;
     }
 
@@ -365,7 +365,7 @@ public class TestEntity {
      *
      * @return the testing text
      */
-    public String getTestingText() {
+    String getTestingText() {
         return testingText;
     }
 
@@ -374,7 +374,7 @@ public class TestEntity {
      *
      * @return the testing int
      */
-    public int getTestingInt() {
+    int getTestingInt() {
         return testingInt;
     }
 
@@ -383,7 +383,7 @@ public class TestEntity {
      *
      * @return the testing long
      */
-    public long getTestingLong() {
+    long getTestingLong() {
         return testingLong;
     }
 
@@ -392,7 +392,7 @@ public class TestEntity {
      *
      * @return the testing char
      */
-    public char getTestingChar() {
+    char getTestingChar() {
         return testingChar;
     }
 
@@ -401,7 +401,7 @@ public class TestEntity {
      *
      * @return the testing short
      */
-    public short getTestingShort() {
+    short getTestingShort() {
         return testingShort;
     }
 
@@ -410,7 +410,7 @@ public class TestEntity {
      *
      * @return the boolean
      */
-    public boolean isTestingBoolean() {
+    boolean isTestingBoolean() {
         return testingBoolean;
     }
 
@@ -419,7 +419,7 @@ public class TestEntity {
      *
      * @return the testing byte
      */
-    public byte getTestingByte() {
+    byte getTestingByte() {
         return testingByte;
     }
 
@@ -428,7 +428,7 @@ public class TestEntity {
      *
      * @return the testing float
      */
-    public float getTestingFloat() {
+    float getTestingFloat() {
         return testingFloat;
     }
 
@@ -437,7 +437,7 @@ public class TestEntity {
      *
      * @return the testing double
      */
-    public double getTestingDouble() {
+    double getTestingDouble() {
         return testingDouble;
     }
 
@@ -446,7 +446,7 @@ public class TestEntity {
      *
      * @return the testing enum
      */
-    public TestingEnum getTestingEnum() {
+    TestingEnum getTestingEnum() {
         return testingEnum;
     }
 
@@ -455,7 +455,7 @@ public class TestEntity {
      *
      * @return the testing timestamp
      */
-    public Timestamp getTestingTimestamp() {
+    Timestamp getTestingTimestamp() {
         return testingTimestamp;
     }
 
@@ -464,7 +464,7 @@ public class TestEntity {
      *
      * @return the testing date
      */
-    public Date getTestingDate() {
+    Date getTestingDate() {
         return testingDate;
     }
 
@@ -473,7 +473,7 @@ public class TestEntity {
      *
      * @return the testing entity
      */
-    public TestEntityOnEntity getTestingEntity() {
+    TestEntityOnEntity getTestingEntity() {
         return testingEntity;
     }
 
@@ -482,7 +482,7 @@ public class TestEntity {
      *
      * @return the string [ ]
      */
-    public String[] getTestingTextArray() {
+    String[] getTestingTextArray() {
         return testingTextArray;
     }
 
@@ -491,7 +491,7 @@ public class TestEntity {
      *
      * @return the int [ ]
      */
-    public int[] getTestingIntArray() {
+    int[] getTestingIntArray() {
         return testingIntArray;
     }
 
@@ -500,7 +500,7 @@ public class TestEntity {
      *
      * @return the long [ ]
      */
-    public long[] getTestingLongArray() {
+    long[] getTestingLongArray() {
         return testingLongArray;
     }
 
@@ -509,7 +509,7 @@ public class TestEntity {
      *
      * @return the char [ ]
      */
-    public char[] getTestingCharArray() {
+    char[] getTestingCharArray() {
         return testingCharArray;
     }
 
@@ -518,7 +518,7 @@ public class TestEntity {
      *
      * @return the short [ ]
      */
-    public short[] getTestingShortArray() {
+    short[] getTestingShortArray() {
         return testingShortArray;
     }
 
@@ -527,7 +527,7 @@ public class TestEntity {
      *
      * @return the boolean [ ]
      */
-    public boolean[] getTestingBooleanArray() {
+    boolean[] getTestingBooleanArray() {
         return testingBooleanArray;
     }
 
@@ -536,7 +536,7 @@ public class TestEntity {
      *
      * @return the byte [ ]
      */
-    public byte[] getTestingByteArray() {
+    byte[] getTestingByteArray() {
         return testingByteArray;
     }
 
@@ -545,7 +545,7 @@ public class TestEntity {
      *
      * @return the float [ ]
      */
-    public float[] getTestingFloatArray() {
+    float[] getTestingFloatArray() {
         return testingFloatArray;
     }
 
@@ -554,7 +554,7 @@ public class TestEntity {
      *
      * @return the double [ ]
      */
-    public double[] getTestingDoubleArray() {
+    double[] getTestingDoubleArray() {
         return testingDoubleArray;
     }
 
@@ -563,7 +563,7 @@ public class TestEntity {
      *
      * @return the timestamp [ ]
      */
-    public Timestamp[] getTestingTimestampArray() {
+    Timestamp[] getTestingTimestampArray() {
         return testingTimestampArray;
     }
 
@@ -572,7 +572,7 @@ public class TestEntity {
      *
      * @return the date [ ]
      */
-    public Date[] getTestingDateArray() {
+    Date[] getTestingDateArray() {
         return testingDateArray;
     }
 
@@ -581,7 +581,7 @@ public class TestEntity {
      *
      * @return the test entity on entity [ ]
      */
-    public TestEntityOnEntity[] getTestingEntityArray() {
+    TestEntityOnEntity[] getTestingEntityArray() {
         return testingEntityArray;
     }
 
@@ -590,7 +590,7 @@ public class TestEntity {
      *
      * @return the testing enum [ ]
      */
-    public TestingEnum[] getTestingEnumArray() {
+    TestingEnum[] getTestingEnumArray() {
         return testingEnumArray;
     }
 
@@ -598,7 +598,7 @@ public class TestEntity {
      * Get null date.
      * @return the null
      */
-    public Date getNullDate() {
+    Date getNullDate() {
         return nullDate;
     }
 }

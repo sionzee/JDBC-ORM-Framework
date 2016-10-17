@@ -29,25 +29,21 @@ import java.util.Random;
 public class TestJDBC {
 
     /**
-     * The SQLite.
-     */
-    SQLite sqLite;
-    /**
      * The Em.
      */
-    EntityManager em;
+    private EntityManager em;
 
     /**
      * The UserRepository
      */
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     /**
      * Init.
      */
     @Before
     public void Init() {
-        sqLite = new SQLite("./testSqlite.db");
+        SQLite sqLite = new SQLite("./testSqlite.db");
         em = new EntityManager(sqLite);
         userRepository = em.registerRepository(UserRepository.class, User.class);
     }
@@ -69,8 +65,8 @@ public class TestJDBC {
      */
     @Test
     public void BCreateTable() {
-        em.getTableCreator().createTable(TestEntityOnEntity.class, true);
         em.getTableCreator().createTable(TestEntity.class, true);
+        em.getTableCreator().createTable(TestEntityOnEntity.class, true);
     }
 
     /**
@@ -106,6 +102,15 @@ public class TestJDBC {
             te.setTestingDateArray(new Date[]{new Date(new java.util.Date().getTime()), new Date(new java.util.Date(200000000000L).getTime()), new Date(new java.util.Date(30000000000L).getTime()), new Date(new java.util.Date(400000000000L).getTime())} );
             te.setTestingDouble(1d);
             te.setTestingDoubleArray(new double[] {0.25545d, 1.54654654d, 165165.61897166231d, 1231.0000005d});
+
+            for (TestEntityOnEntity t : tes) {
+                t.setTestedEntity(te);
+                em.persist(t);
+            }
+
+            te0.setTestedEntity(te);
+            em.persist(te0);
+
             te.setTestingEntity(te0);
             te.setTestingEntityArray(tes);
             te.setTestingEnum(TestingEnum.VALUE_A);
@@ -236,8 +241,7 @@ public class TestJDBC {
 
         TestEntityOnEntity[] entities = te.getTestingEntityArray();
         Assert.assertNotNull(entities);
-        for(int i = 0; i < entities.length; i++) {
-            TestEntityOnEntity e = entities[i];
+        for (TestEntityOnEntity e : entities) {
             Debug.info(e.getTestValue());
         }
     }
@@ -252,8 +256,7 @@ public class TestJDBC {
 
         TestEntityOnEntity[] entities = te.getTestingEntityArray();
         Assert.assertNotNull(entities);
-        for(int i = 0; i < entities.length; i++) {
-            TestEntityOnEntity e = entities[i];
+        for (TestEntityOnEntity e : entities) {
             e.setTestValue("MODIFED VALUE");
             this.em.persist(e);
         }
@@ -330,9 +333,7 @@ public class TestJDBC {
 
         em.flush();
 
-        um.filter(u -> u.getAge() > 80).forEach(user -> {
-            Debug.info("User " + user.getUsername() + " is going to dead, he is " + user.getAge() + " years old.");
-        });
+        um.filter(u -> u.getAge() > 80).forEach(user -> Debug.info("User " + user.getUsername() + " is going to dead, he is " + user.getAge() + " years old."));
 
         um.filter(u -> u.getAge() >= 100).forEach(user -> {
             Debug.info("User " + user.getUsername() + " is dead, removing.");

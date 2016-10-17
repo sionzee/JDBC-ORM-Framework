@@ -7,14 +7,14 @@ import cz.ormframework.log.Debug;
  * JDBC ORM Framework
  * Created 28.07.2016
  */
-public class ModifyThread extends Thread implements Runnable {
+class ModifyThread extends Thread implements Runnable {
 
     private TestEntity te;
     private EntityManager em;
     private boolean result;
     private boolean persist = true;
 
-    public ModifyThread(EntityManager em, TestEntity te, boolean result, boolean persist) {
+    ModifyThread(EntityManager em, TestEntity te, boolean result, boolean persist) {
         this.em = em;
         this.te = te;
         this.result = result;

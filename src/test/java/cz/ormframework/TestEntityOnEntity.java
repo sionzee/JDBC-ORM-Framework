@@ -8,7 +8,7 @@ import cz.ormframework.annotations.Table;
  * JDBC ORM Framework Release
  */
 @Table
-public class TestEntityOnEntity {
+class TestEntityOnEntity {
 
     @Column
     private int id;
@@ -16,12 +16,23 @@ public class TestEntityOnEntity {
     @Column
     private String testValue = "TestValue";
 
+    @Column
+    private TestEntity testedEntity;
+
+    public TestEntity getTestedEntity() {
+        return testedEntity;
+    }
+
+    void setTestedEntity(TestEntity testedEntity) {
+        this.testedEntity = testedEntity;
+    }
+
     /**
      * Gets test value.
      *
      * @return the test value
      */
-    public String getTestValue() {
+    String getTestValue() {
         return testValue;
     }
 
@@ -30,7 +41,7 @@ public class TestEntityOnEntity {
      *
      * @param testValue the test value
      */
-    public void setTestValue(String testValue) {
+    void setTestValue(String testValue) {
         this.testValue = testValue;
     }
 }

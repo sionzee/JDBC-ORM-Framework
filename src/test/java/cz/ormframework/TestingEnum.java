@@ -4,7 +4,7 @@ package cz.ormframework;
  * siOnzee.cz
  * JDBC ORM Framework Release
  */
-public enum TestingEnum {
+enum TestingEnum {
     /**
      * Value a testing enum.
      */
