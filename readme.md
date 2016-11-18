@@ -1,5 +1,5 @@
-JDBC ORM Framework 2.1
-===================
+JDBC ORM Framework 2.2
+======================
 Framework for administration entities.
 This framework is created to be user-friendly and **easy** to use.
 
@@ -14,8 +14,9 @@ Usage
 -------------
 #### <img align="left" src="https://cdn4.iconfinder.com/data/icons/6x16-free-application-icons/16/Refresh.png" />&nbsp;Init a database
 ```java
+boolean enableEvents = true;
 MySQL databaseInstance = new MySQL(host, database, user, password, port);
-EntityManager entityManager = new EntityManager(databaseInstance);
+EntityManager entityManager = new EntityManager(databaseInstance, enableEvents);
 ```
 
 > **Note:**
@@ -52,8 +53,10 @@ public class Rank {
 
 > - Entity have to have **@Table** annotation 
 > - Every field which have to be in database must have **@Column** annotation. (**including id**)
+> - Declare field 'entityManager' of type 'EntityManager' to get instance of EntityManager in Entity class. (Do not recommended)
+> - Declare method 'getTable()' of type 'String' to set custom table name in runtime environment.
 
-#### <img align="left" src="http://files.softicons.com/download/toolbar-icons/16x16-free-application-icons-by-aha-soft/png/16x16/Create.png" />&nbsp;Create tables
+#### <img align="left" src="https://cdn0.iconfinder.com/data/icons/16x16-free-toolbar-icons/16/13.png" />&nbsp;Create tables
 
 ```java
 TableCreator tableCreator = entityManager.getTableCreator();
@@ -70,7 +73,7 @@ tableCreator.createTable(Rank.class, recreateTables);
 
 > - Path to this Jar you can receive through: **JarUtils.getJarFile(EntityManager.class);**
 
-#### <img align="left" src="http://files.softicons.com/download/toolbar-icons/16x16-free-toolbar-icons-by-aha-soft/png/16/add.png" />&nbsp;Insert into a table
+#### <img align="left" src="http://help.autodesk.com/cloudhelp/ENU/Fusion-Model/images/GUID-A508A0DC-E730-4A9C-AB80-AC948FFADC50.png" />&nbsp;Insert into a table
 
 ```java
 Rank rank = new Rank();
@@ -90,7 +93,7 @@ entityManager.persist(rank).persist(user).flush();
 
 #### <img align="left" src="http://findicons.com/files/icons/949/token/16/search.png" />&nbsp;Select from a database
 ```java
-User user = entityManager.getRepository(User.class).find().where("id = {0}", 1).ONE();
+User user = entityManager.getRepository(User.class).find().where("id = {0}", 1).one();
 if(user != null) {
     print("User " + user.getName() + " have a rank " + user.getRank().getName());
     //User George have a rank Administrator
@@ -103,7 +106,7 @@ if(user != null) {
 
 #### <img align="left" src="https://cdn2.iconfinder.com/data/icons/aspneticons_v1.0_Nov2006/edit_16x16.gif" />&nbsp;Modify value
 ```java
-User user = entityManager.getRepository(User.class).find().where("id = {0}", 1).ONE();
+User user = entityManager.getRepository(User.class).find().where("id = {0}", 1).one();
 user.setName("NewName");
 entityManager.persist(user).flush();
 ```
@@ -111,7 +114,7 @@ entityManager.persist(user).flush();
 
 #### <img align="left" src="https://cdn2.iconfinder.com/data/icons/aspneticons_v1.0_Nov2006/delete_16x16.gif" />&nbsp;Remove an entity
 ```java
-User user = entityManager.getRepository(User.class).find().where("id = {0}", 1).ONE();
+User user = entityManager.getRepository(User.class).find().where("id = {0}", 1).one();
 if(user != null) // Exists
 	entityManager.delete(user);
 	
@@ -123,6 +126,40 @@ entityManager.flush();
 > **Note:**
 
 > - When calling a delete, don't forget for a flush!
+
+#### <img align="left" src="http://findicons.com/files/icons/2705/clean_anti_malware/16/6_custom_icons_10.png" />&nbsp;Custom repositories
+```java
+class UserRepository extends Repository<User> {
+    public UserRepository(Class<User> clazz, EntityManager entityManager) {
+        super(clazz, entityManager);
+    }
+    
+    public User getUserByName(String username) {
+        return this.find().where("username = {0}", username).one();
+    }
+}
+
+//Register repository in EntityManager
+UserRepository userRepository = em.registerRepository(UserRepository.class, User.class);
+
+//And now usage :-)
+User user = userRepository.getUserByName("George");
+if(user == null)
+    //CODE  
+```
+
+#### <img align="left" src="https://cdn0.iconfinder.com/data/icons/16x16-free-toolbar-icons/16/13.png" />&nbsp;Register a listener
+```java
+//<AnyEvent>.getHandlerList().addListener(event -> {});
+EntityUpdateEvent.getHandlerList().addListener(event -> {
+    if(event.getUpdateTo() instanceof User && ((User) event.getUpdateTo()).getAge() == 22)
+        event.setCancelled(true);
+    //Update will be cancelled! :)
+});
+```
+> **Note:**
+
+> - Events are only called when they're enabled in constructor
 
 #### Supported Types
 * enum
