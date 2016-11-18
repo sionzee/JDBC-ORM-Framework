@@ -3,6 +3,8 @@ JDBC ORM Framework 2.2
 Framework for administration entities.
 This framework is created to be user-friendly and **easy** to use.
 
+If you have any issues with this version of the JDBC ORM Framework, then try Update1 branch.
+
 ----------
 Requirements
 -------------
