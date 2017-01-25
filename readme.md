@@ -1,6 +1,6 @@
 JDBC ORM Framework 2.2
 ======================
-Framework for administration entities.
+Framework for manage entities.
 This framework is created to be user-friendly and **easy** to use.
 
 ----------
@@ -8,7 +8,7 @@ Requirements
 -------------
 * Java 8
 * **Brain** and time
-* SQL knowledge
+* A little SQL knowledge
 
 Usage
 -------------
@@ -21,7 +21,7 @@ EntityManager entityManager = new EntityManager(databaseInstance, enableEvents);
 
 > **Note:**
 
-> - For a custom connection use custom class which implement IConnection
+> - For a custom connection use custom class which is implementing IConnection
 > - EntityManager is needed everywhere!
 
 
@@ -51,9 +51,9 @@ public class Rank {
 
 > **Note:**
 
-> - Entity have to have **@Table** annotation 
-> - Every field which have to be in database must have **@Column** annotation. (**including id**)
-> - Declare field 'entityManager' of type 'EntityManager' to get instance of EntityManager in Entity class. (Do not recommended)
+> - Entities have to own **@Table** annotation 
+> - Every field which have to be in database must have a **@Column** annotation. (**including id**)
+> - Declare field 'entityManager' of type 'EntityManager' to get instance of EntityManager in your Entity class. (Not recommended)
 > - Declare method 'getTable()' of type 'String' to set custom table name in runtime environment.
 
 #### <img align="left" src="https://cdn0.iconfinder.com/data/icons/16x16-free-toolbar-icons/16/13.png" />&nbsp;Create tables
@@ -89,7 +89,7 @@ entityManager.persist(rank).persist(user).flush();
 
 > **Note:**
 
-> - On persist is automatically assigned ID to the user entity.
+> - On persist is automatically assigned ID to entity.
 
 #### <img align="left" src="http://findicons.com/files/icons/949/token/16/search.png" />&nbsp;Select from a database
 ```java
@@ -159,7 +159,7 @@ EntityUpdateEvent.getHandlerList().addListener(event -> {
 ```
 > **Note:**
 
-> - Events are only called when they're enabled in constructor
+> - Events are only called when they are enabled in constructor
 
 #### Supported Types
 * enum
