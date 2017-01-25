@@ -1,7 +1,8 @@
 JDBC ORM Framework 2.2
 ======================
-Framework for manage entities.
-This framework is created to be user-friendly and **easy** to use.
+Framework for manage entities. This framework is created to be user-friendly and **easy** to use.
+
+Unit tests are ready! *(test package)*
 
 ----------
 Requirements
@@ -12,6 +13,9 @@ Requirements
 
 Usage
 -------------
+
+Copy content of package 'main' into your project. 
+
 #### <img align="left" src="https://cdn4.iconfinder.com/data/icons/6x16-free-application-icons/16/Refresh.png" />&nbsp;Init a database
 ```java
 boolean enableEvents = true;
