@@ -14,7 +14,7 @@ Requirements
 Usage
 -------------
 
-Copy content of package 'main' into your project. 
+Copy content of package 'main/java' into your project. 
 
 #### <img align="left" src="https://cdn4.iconfinder.com/data/icons/6x16-free-application-icons/16/Refresh.png" />&nbsp;Init a database
 ```java
