@@ -157,8 +157,8 @@ public class EntityManager implements IEntityManager {
                 Debug.exception(e);
             }
 
-            //statement.execute(query, Statement.RETURN_GENERATED_KEYS);
-            statement.execute(query);
+            statement.execute(query, Statement.RETURN_GENERATED_KEYS);
+            //statement.execute(query); Why was line above this commented and this uncommented? 
             ResultSet rs = statement.getGeneratedKeys();
             rs.next();
             EntityUtils.setId(entity, rs.getInt(1));
